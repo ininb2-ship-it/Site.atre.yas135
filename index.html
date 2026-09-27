@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>عطر یاس</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    html, body {
+      width: 100%;
+      min-width: 100%;
+      height: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #050805;
+    }
+
+    body {
+      color: #ffffff;
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      opacity: 0;
+      animation: pageFadeIn 1s ease forwards;
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none; opacity: 1; }
+    }
+
+    .app-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      overflow: hidden;
+      isolation: isolate;
+      flex: 0 1 500px;
+    }
+
+    @media (min-width: 501px) {
+      .app-container {
+        border-left: 1px solid rgba(255,255,255,0.04);
+        border-right: 1px solid rgba(255,255,255,0.04);
+      }
+    }
+
+    .bg-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      transition: opacity 0.8s ease;
+    }
+
+    #bg-stage1 { opacity: 1; }
+    #bg-stage2 { opacity: 0; pointer-events: none; }
+
+    #particles-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .interactive-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    .top-btn {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      -webkit-tap-highlight-color: transparent;
+      z-index: 15;
+    }
+
+    #btn-audio-play { top: 3.5%; left: 7%; width: 12%; aspect-ratio: 1; }
+    #btn-audio-mute { top: 3.5%; left: 21%; width: 12%; aspect-ratio: 1; }
+    #btn-help       { top: 3.5%; right: 14.5%; width: 12%; aspect-ratio: 1; }
+    #btn-home       { top: 3.5%; right: 7%; width: 12%; aspect-ratio: 1; }
+
+    #bud-target {
+      position: absolute;
+      top: 36%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38%;
+      height: 25%;
+      border-radius: 50%;
+      cursor: pointer;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .petal-target {
+      position: absolute;
+      width: 19%;
+      height: 15%;
+      border-radius: 50%;
+      cursor: pointer;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
+      display: none;
+    }
+
+    #petal-1 { top: 26%; left: 40.5%; }
+    #petal-2 { top: 32%; left: 59.5%; }
+    #petal-3 { top: 46%; left: 66.5%; }
+    #petal-4 { top: 59%; left: 61.5%; }
+    #petal-5 { top: 69%; left: 51.5%; }
+    #petal-6 { top: 69%; left: 29.5%; }
+    #petal-7 { top: 59%; left: 19.5%; }
+    #petal-8 { top: 46%; left: 14.5%; }
+    #petal-9 { top: 32%; left: 21.5%; }
+
+    .scroll-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 30;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .scroll-overlay.active {
+      display: flex;
+    }
+
+    .scroll-frame {
+      position: relative;
+      width: min(90%, 380px);
+      max-width: calc(100% - 24px);
+      height: min(82svh, 640px);
+      height: min(82dvh, 640px);
+      max-height: calc(100% - 24px);
+      min-height: 0;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(212, 175, 55, 0.4);
+      display: flex;
+      flex-direction: column;
+      padding: 45px 25px 25px 25px;
+      transform: scale(0.2);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.4s ease;
+    }
+
+    .scroll-overlay.open .scroll-frame {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+    }
+
+    .zoom-btn {
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+
+    .zoom-btn:hover {
+      background: #ffd700;
+      color: #000;
+    }
+
+    .zoom-btn:active {
+      transform: scale(0.9);
+    }
+
+    .scroll-content-wrapper {
+      flex-grow: 1;
+      overflow-y: auto;
+      text-align: right;
+      padding-left: 8px;
+      margin-bottom: 10px;
+    }
+
+    .scroll-content-wrapper::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .scroll-content-wrapper::-webkit-scrollbar-thumb {
+      background: #d4af37;
+      border-radius: 4px;
+    }
+
+    .scroll-header-title {
+      color: #ffd700;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-align: right;
+    }
+
+    .scroll-name-title {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: right;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+      padding-bottom: 6px;
+    }
+
+    .scroll-quote-text {
+      color: #f3e5ab;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 15px;
+      text-align: right;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px;
+      border-right: 3px solid #ffd700;
+      border-radius: 4px;
+    }
+
+    .scroll-main-text {
+      color: #f8fafc;
+      font-size: 15px;
+      line-height: 2;
+      text-align: justify;
+      text-align-last: right;
+      white-space: pre-line;
+    }
+
+    .parts-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .parts-menu-item {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .parts-menu-item:hover {
+      background: #ffd700;
+      color: #000;
+    }
+
+    .parts-menu-item:active {
+      transform: scale(0.97);
+    }
+
+    .ref-link {
+      color: #ffd700;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0 4px;
+      text-decoration: underline;
+      display: inline-block;
+      direction: ltr;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .ref-link:hover {
+      color: #fff3c4;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    }
+
+    .inline-source-box {
+      display: none;
+      background: rgba(20, 15, 5, 0.95);
+      border: 1px solid #ffd700;
+      color: #f3e5ab;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 6px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .inline-source-box.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .source-item {
+      margin-bottom: 4px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #f8fafc;
+    }
+
+    .scroll-footer-btns {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding-top: 10px;
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .nav-btn {
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: #ffd700;
+      color: #000;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    .modal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
+      opacity: 0;
+      background: rgba(10, 22, 14, 0.95);
+      border: 1.5px solid rgba(212, 175, 55, 0.8);
+      padding: 24px;
+      border-radius: 18px;
+      width: 85%;
+      max-width: 320px;
+      text-align: center;
+      z-index: 40;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(212, 175, 55, 0.4);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.3s ease;
+    }
+
+    .modal.active {
+      display: block;
+    }
+
+    .modal.active.open {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .modal h3 {
+      margin-bottom: 12px;
+      color: #ffd700;
+      font-size: 18px;
+    }
+
+    .modal p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+
+    .modal-btn {
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 8px 24px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: inherit;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-container">
+    <img src="stage1-image.jpg" alt="عطر یاس - غنچه" class="bg-img" id="bg-stage1">
+    <img src="1000305677.png" alt="عطر یاس - ۹ رایحه" class="bg-img" id="bg-stage2">
+
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="interactive-layer">
+      <div class="top-btn" id="btn-audio-play" title="پخش صدا"></div>
+      <div class="top-btn" id="btn-audio-mute" title="قطع صدا"></div>
+      <div class="top-btn" id="btn-help" title="راهنما"></div>
+      <div class="top-btn" id="btn-home" title="خانه"></div>
+
+      <div id="bud-target" title="ورود به رایحه‌ها"></div>
+
+      <div class="petal-target" id="petal-1" data-index="0"></div>
+      <div class="petal-target" id="petal-2" data-index="1"></div>
+      <div class="petal-target" id="petal-3" data-index="2"></div>
+      <div class="petal-target" id="petal-4" data-index="3"></div>
+      <div class="petal-target" id="petal-5" data-index="4"></div>
+      <div class="petal-target" id="petal-6" data-index="5"></div>
+      <div class="petal-target" id="petal-7" data-index="6"></div>
+      <div class="petal-target" id="petal-8" data-index="7"></div>
+      <div class="petal-target" id="petal-9" data-index="8"></div>
+    </div>
+
+    <div class="scroll-overlay" id="scroll-overlay">
+      <div class="scroll-frame" id="scroll-frame">
+        <div class="zoom-controls">
+          <button class="zoom-btn" id="zoom-in" title="بزرگ‌نمایی">+</button>
+          <button class="zoom-btn" id="zoom-out" title="کوچک‌نمایی">-</button>
+        </div>
+
+        <div class="scroll-content-wrapper" id="scroll-wrapper">
+          <div class="scroll-header-title" id="scroll-header-title">رایحه اول</div>
+          <div class="scroll-name-title" id="scroll-name-title">فاطمه</div>
+          <div class="scroll-quote-text" id="scroll-quote-text"></div>
+          <div class="scroll-main-text" id="scroll-main-text"></div>
+        </div>
+
+        <div class="scroll-footer-btns">
+          <button class="nav-btn" id="btn-back-to-menu" style="display:none;">بازگشت به قسمت‌ها</button>
+          <button class="nav-btn" id="btn-back-petals">برگشت به رایحه‌ها</button>
+          <button class="nav-btn" id="btn-back-home">برگشت به خانه</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="info-modal">
+      <h3 id="modal-title">راهنما</h3>
+      <p id="modal-desc">توضیحات</p>
+      <button class="modal-btn" id="close-modal">متوجه شدم</button>
+    </div>
+  </div>
+
+  <audio id="bg-music" preload="auto"></audio>
+
+  <script>
+    const scentsData = [
+      {
+        title: "رایحه اول",
+        name: "فاطمه",
+        bgImage: "scroll-bg.jpg",
+        quote: "«استشمام رایحه و بوی خوش مهرِ بیکرانِ مادری و حریمِ قدسیِ دست‌نیافتنی از آستان مقدس فاطمی»",
+        sources: {
+          1: "سوره مبارکه روم، آیه ۳۰.",
+          2: "امام باقر (علیه السلام) در تفسیر «فِطْرَتِ اللَّهِ الَّتِي فَطَرَ النَّاسَ عَلَيْهَا» فرمودند: «هِيَ الْوِلايَةُ»؛ منظور از فطرت، ولایت اهل‌بیت علیهم‌السلام است. کافی، ج ۱، ص ۴۱۵.",
+          3: "علل الشرائع، ج ۱، ص ۱۵؛ بحارالانوار، ج ۲۶، ص ۳۲۰ و ج ۳۷، ص ۴۵.",
+          4: "بحارالانوار، ج ۴۰، ص ۵۴",
+          5: "سوره قدر، آیه ۳.",
+          6: "الأنوار القدسیة، ص ۳۹.",
+          7: "تفسیر فرات کوفی، ص ۵۸۱؛ بحارالانوار، ج ۴۳، ص ۶۵.",
+          8: "همان.",
+          9: "سوره قدر، آیه ۳.",
+          10: "سوره قدر، آیه ۴.",
+          11: "سوره قدر، آیه ۵.",
+          12: "فرازی از حدیث متواتر ثقلین: پیامبر اکرم (صلی الله علیه و آله) فرمودند: «إِنِّي تَارِكٌ فِيكُمُ الثَّقَلَيْنِ كِتَابَ اللَّهِ وَ عِتْرَتِي أَهْلَ بَيْتِي وَ إِنَّهُمَا لَنْ يَفْتَرِقَا حَتَّى يَرِدَا عَلَيَّ الْحَوْضَ.» وسائل الشیعة، ج ۲۷، ص ۳۳.",
+          13: "امالی شیخ طوسی، ص ۱۵۵؛ بحارالانوار، ج ۴۳، ص ۱۹۱."
+        },
+        parts: [
+          `«فَأَقِمْ وَجْهَكَ لِلدِّينِ حَنِيفًا ۚ فِطْرَتَ اللَّهِ الَّتِي فَطَرَ النَّاسَ عَلَيْهَا ۚ لَا تَبْدِيلَ لِخَلْقِ اللَّهِ...»<span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\n\nفطرت یا سرشت و طینت، اشاره به نوع خاص آفرینش بندگان دارد؛ آفرینشی که بر مبنای معرفت امام یا همان دینِ قیّم شکل گرفته است<span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div> و سرّ فاطریت خداوند که به معنای اعطای وجود به مخلوقات و معرفت‌بخشیدن به آن‌هاست، در وجود مقدس حضرت فاطمه (علیها السلام) نهفته است و فطرتِ خلق، مفطور به محبت فاطمی می‌باشد.`,
+          `هنگامی که خداوند عزّوجلّ نور اشباح ما را به حضرت آدم (علیه السلام) معرفی می‌نمود، این‌گونه فرمود:\n«وَ هَذِهِ فَاطِمَةُ وَ أَنَا فَاطِرُ السَّمَاوَاتِ وَ الْأَرْضِ، فَاطِمُ أَعْدَائِي عَنْ رَحْمَتِي يَوْمَ فَصْلِ قَضَائِي، وَ فَاطِمُ أَوْلِيَائِي عَمَّا يَعُرُّهُمْ وَ يُسِيئُهُمْ، فَشَقَقْتُ لَهَا اسْماً مِنِ اسْمِي.»<span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\n\nو چه زیبا و نیکوست این اشتقاق...\nکه مولا، امیرِ عالم و حضرت مادر را به تفاخر وامی‌دارد.\n\nحضرت امیرالمؤمنین (علیه السلام) می‌فرمایند:\n«أَنَا الَّذِي اشْتَقَّ اللَّهُ تَعَالَى اسْمِي مِنِ اسْمِهِ، فَهُوَ الْعَالِي وَ أَنَا عَلِيٌّ.»\nمن کسی هستم که خداوند تعالی اسم مرا از نام خود مشتق کرده است؛ پس او عالی است و من علی هستم.\n\nحضرت خانم، صدیقهٔ کبری (علیها السلام) در پاسخ می‌فرمایند:\n«وَ أَنَا كَذَلِكَ، فَهُوَ الْفَاطِرُ وَ أَنَا فَاطِمَةُ.»<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>\nمن نیز این‌چنین هستم؛ پس او فاطر است و من فاطمه‌ام.`,
+          `«لَيْلَةُ الْقَدْرِ خَيْرٌ مِنْ أَلْفِ شَهْرٍ»<span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>\nفُطِمُوا عَنْ مَعْرِفَتِهَا...\nوَلَها جَلالٌ لَیسَ فَوْقَ جَلالِها اِلّا جَلالُ اللهِ جَلَّ جَلالُه، وَ لَها کَمالٌ لَیسَ فَوْقَ کَمالِها اِلّا کَمالُ اللهِ عَمَّ نَوالُه.<span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>\n\nاین شأن فاطمه (سلام الله علیها) است که فرموده‌اند:\n«لِمَ سُمِّيَتْ فَاطِمَةُ بِالْفَاطِمَةِ؟ لِأَنَّ الْخَلْقَ فُطِمُوا عَنْ مَعْرِفَتِهَا»<span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>؛ چرا فاطمه، فاطمه نامیده شد؟ زیرا مردم از شناخت و معرفت او بریده شده‌اند.\n\nاگر لیلةالقدر را فهمیدیم، فاطمه (سلام الله علیها) را می‌شناسیم؛\n«فَمَنْ عَرَفَ فَاطِمَةَ حَقَّ مَعْرِفَتِهَا فَقَدْ أَدْرَكَ لَيْلَةَ الْقَدْرِ»<span class="ref-link" onclick="toggleSource(this, 8)">[۸]</span><div class="inline-source-box"></div>؛ که «لَيْلَةُ الْقَدْرِ خَيْرٌ مِنْ أَلْفِ شَهْرٍ»<span class="ref-link" onclick="toggleSource(this, 9)">[۹]</span><div class="inline-source-box"></div>.\n\nاگر یک شب با عشق فاطمه (سلام الله علیها) بیتوته کنیم، بهتر از عبادت هزار ماه است: «لَيْلَةُ الْقَدْرِ خَيْرٌ مِنْ أَلْفِ شَهْرٍ».\nدر آن شبی که به عشق فاطمه (سلام الله علیها) بیتوته کنیم:\n«تَنَزَّلُ الْمَلائِكَةُ وَ الرُّوحُ فیها بِإِذْنِ رَبِّهِمْ مِنْ كُلِّ أَمْرٍ»<span class="ref-link" onclick="toggleSource(this, 10)">[۱۰]</span><div class="inline-source-box"></div>؛ و نهایتاً در سلمِ فاطمه‌ایم: «سَلامٌ هِيَ»، تا زمانی که یوسفش بیاید: «حَتَّى مَطْلَعِ الْفَجْرِ»<span class="ref-link" onclick="toggleSource(this, 11)">[۱۱]</span><div class="inline-source-box"></div>.\n\nمگر بدون اهل بیت (علیهم السلام)، قرآن معنا دارد؟ «لَنْ يَفْتَرِقَا»<span class="ref-link" onclick="toggleSource(this, 12)">[۱۲]</span><div class="inline-source-box"></div>؛ بدون اهل بیت (علیهم السلام)، قرآن یک پوست و ظاهر است. باید آن قرآنی را که در مقابل اهل بیت (علیهم السلام) قرار می‌گیرد، بالای نیزه‌ها سوزاند!\nیابن الحسن!\nگر تو زیبا صنم از دیر درآیی به حرم\nکافر آن است که آتش نزند قرآن را`,
+          `مگر قیامت چگونه است... مگر کی معنا می‌شود جز آن لحظه‌ای که عمامه از سر امیرِ عالم بر زمین خورد... جهان بود که در سکوت فرو رفت... جهانی که هنوز که هنوز است، حیران و سرگردان دور خودش می‌پیچد و به لرزه می‌افتد از صدای ضرب سیلی...\nرخت عزا بر عالم کشیده شد. بعد از آن، لرزید دستان مولا برای ساخت تابوت؛ لرزید پای حسن، آن‌دم که از کوچه می‌گذشت؛ لرزید قلب حسین برای کمری خمیده؛ و به لرزه درآمد قامت زینب برای نماز شکسته...\nهمان لحظات که فاطمه از حال رفته بود، شاید هم از این دنیا...\nپارچه از صورت کنار زد و فرمود: «فاطمه جانم! برخیز، من علی هستم، با من حرف بزن.»\nعلی حالا تمام وجودش از داغ دوری فاطمه می‌لرزد و سر تا پا التماس است... ولی فاطمه‌اش به قدر چشم‌بازکردنی توان در جسم خسته‌اش و به قدر یاعلی‌گفتنی نفس در سینهٔ شکسته‌اش نمانده.\nعلی این بار تمام تنهایی‌اش را به رخ فاطمه می‌کشد: «فاطمه! منم علی!»\nو چشم‌هایی باز شد تا ندای امام زمانش بی‌جواب نماند. اشک‌های چشم علی روی صورت و گونه‌های فاطمه افتاد و خطاب به امیرالمؤمنین عرض کرد:\n«علی جانم! یک خواهشی از تو دارم. علی جانم! اگر به غیر از پهلو و محسنم، صورت و چشمان و گوشواره و وجودم چیز دیگری داشتم، نثارت می‌کردم. علی جانم! منِ فاطمه‌ات را حلال کن...»\nبا دستان مجروحش اشک چشمان علی را پاک می‌کرد و به صورتش می‌مالید:\n«علی جانم! می‌خواهم با اشک‌های صورت تو روز قیامت پا بر عرصهٔ محشر بگذارم. علی جانم! مرا نیمه‌شب دفن کن؛ نگذار آن دو ملعون در مراسم تدفین و تشییع من شرکت کنند؛ می‌خواهم غریبانه و شبانه دفن شوم...»<span class="ref-link" onclick="toggleSource(this, 13)">[۱۳]</span><div class="inline-source-box"></div>\n\nزینبم! دخترم آرام گریه کن...\nحسنینم! آهسته ناله کنید که وصیت مادرتان است...\nاما مدتی نگذشت که علی سر به دیوار بلند نهاد و شروع به ضجه زدن کرد.\n\nزینب به آغوش پدر پناه برد و عرض کرد: «باباجانم! مگر نگفتید آرام باشیم؟»\n«آه زینبم! بازوی ورم‌کردهٔ فاطمه‌ام را چه کنم؟ زینبم! این جای انگشتان کیست که فاطمه‌ام صورت کبودش را زیر چادر از من پنهان می‌کرد؟...»`,
+          `آن‌قدر دلمان داغدار صورت نیلی و پهلوی شکسته است که قطره‌قطرهٔ اشک‌هایمان منتقم مادر را تمنا می‌کند؛ تمنا می‌کند آن لحظه‌ای را که به اقامهٔ شما بر غبار چادر خاکی سجده کرده‌ایم و در مزار مادر، صدای روضه خواندنتان می‌پیچد.\n\nآقاجان! شما را قسم می‌دهیم به همان عهد و پیمان الست که «یا فاطِرُ بِحَقِّ فاطِمَة»، بیایید؛ بلکه با نور وجود مقدستان، ریسمان‌های چادر خاکی را پیدا و دریافت کنیم. بیایید تا زیر سایهٔ ولایت شما وارد فِطر شویم و به سوی فاطِر رجوع کنیم. بیایید پناهِ مادر... بلکه با کنیزی برای شما، مورد التفاتِ امّ عالم امکان قرار گیریم و با رجوع به حضرتشان، به فِطر ارجاع یابیم.`
+        ]
+      },
+
+      {
+        title: "رایحه دوم",
+        name: "بتول",
+        bgImage: "scroll-bg-batool.jpg",
+        quote: "«استشمام رایحه و بوی خوش شکوهِ برگزیدگی و پیوستگیِ محض به حریم کبریایی از آستان مقدس فاطمی»",
+        sources: {
+          1: "علل الشرائع، ج 1، ص 181.",
+          2: "معانی الأخبار، ص 64؛ تاج العروس، ج 14، ص 53.",
+          3: "المصباح، ص 411؛ بحارالانوار، ج 92، ص 268.",
+          4: "ینابیع المودة، ج 2، ص 322؛ مناقب آل أبی طالب، ج 3، ص 330.",
+          5: "سوره مبارکه مزمل، آیه 8.",
+          6: "امالی، ص 115؛ بحارالانوار، ج 28، ص 37 و ج 43، ص 172.",
+          7: "کافی، ج 1، ص 241؛ خصال، ج 2، ص 483.",
+          8: "امالی، ص 553؛ معانی الأخبار، ص 58.",
+          9: "کشف الغمة، ج 1، ص 343؛ بحارالانوار، ج 32، ص 299.",
+          10: "دیوان ابن المقرب، ص 356.",
+          11: "الطراز المذهب، ص 42؛ السیدة زینب بطلة کربلاء، ص 16.",
+          12: "خصائص الزینبیة، ص 61.",
+          13: "بحارالانوار، ج 43، ص 213."
+        },
+        parts: [
+          `وَ سُمِّيَتْ فَاطِمَةُ بَتُولاً لِأَنَّهَا...<span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\n\nیکی از اسامی مبارک حضرت صدیقهٔ کبری (سلام الله علیها) «بتول» است.\n\nبتول از ریشهٔ «بتل» به معنای جداشده و بریده است که دو معنا را در بر می‌گیرد؛ یکی از معانی آن به بانویی اشاره دارد که از زنان عصر خود از نظر فضل، دین و حسب جدا و برتر بوده است<span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>.\n\nچنان‌که در فراز بیست‌وششم دعای شریف علویِ مصری، حضرت مریم را با نام حضرت مادر (سلام الله علیها) می‌خوانیم:\n«إِلَهِي وَ أَسْأَلُكَ بِاسْمِكَ الَّذِي دَعَتْكَ بِهِ عَبْدَتُكَ وَ صِدِّيقَتُكَ مَرْيَمُ الْبَتُولُ وَ أُمُّ الْمَسِيحِ الرَّسُولِ عَلَيْهِمَا السَّلامُ...»<span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\nوَ سُمِّيَتْ فَاطِمَةُ بَتُولاً لِأَنَّهَا بَتَلَتْ عَنِ النَّظِيرِ.<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>\n\nو دیگر معنا هم به «مقام انقطاع إلی الله» دلالت می‌نماید؛ چنان‌که حضرت قرآن می‌فرماید:\n«وَ اذْكُرِ اسْمَ رَبِّكَ وَ تَبَتَّلْ إِلَيْهِ تَبْتِيلاً»؛ نام پروردگارت را یاد کن و تنها به او دل ببند.<span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>\n\nدربارهٔ اوصاف و حالات عبادی حضرت صدیقهٔ طاهره (سلام الله علیها) در مقام انقطاع إلی عبادة الله تعالی، حضرت ختمی‌مرتبت (صلوات الله علیه) فرمودند:\n«وَ يَقُولُ اللَّهُ عَزَّ وَ جَلَّ لِمَلائِكَتِهِ: يَا مَلائِكَتِي! أُنْظُرُوا إِلَى أَمَتِي فَاطِمَةَ سَيِّدَةَ النِّسَاءِ قَائِمَةً بَيْنَ يَدَيَّ تَرْتَعِدُ فَرَائِصُهَا مِنْ خِيفَتِي وَ قَدْ أَقْبَلَتْ عَلَى عِبَادَتِي، أَشْهِدُكُمْ أَنِّي قَدْ آمَنْتُ شِيعَتَهَا مِنَ النَّارِ.»<span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>\nخداوند به ملائکهٔ خود می‌فرماید: ای ملائکهٔ من! به فاطمه که برترین زنان است نظر کنید که چگونه در مقابل من قرار گرفته است. اعضاء و جوارح او از خوف من می‌لرزد. فاطمه با توجه قلبی مشغول عبادت من شده است؛ من شما را شاهد می‌گیرم که شیعیان وی را در امان می‌گذارم.\nإنقطاع إلی عبادة الله تعالی...`,
+          `زوج البتول\nآرام گفتی: «علی جانم! خواب پدر بزرگوارم را دیدم؛ دگر وقت وصالم با رسول خدا فرا رسیده است، اما قلبم آتش می‌گیرد از غم‌هایی که بعد از من در این دنیای بی‌وفا خواهی دید... بمیرد زهرا برایت علی جانم! زهرایت را حلال کن حبیبم!»\n\nعشق علی!\nجان علی!\nروح علی!\n\nتو در شعله نشستی، علی حلال کنه؟! \nتو در کوچه شکستی، علی حلال کنه؟! \nآن‌قدر به جانم آتش نزن دردانهٔ علی!\nتو بروی، علی می‌ماند و سلام‌های بی‌جوابش...\nعلی می‌ماند و آن ملاعینی که مرا از عشقم جدا کردند...\nعلی می‌ماند و دردِدل‌هایش با چاه...\nعلی می‌ماند و حسن و حسین و زینبش...\nعلی می‌ماند بدون فاطمه‌اش...`,
+          `زوج البتول:\nاز آدم تا خاتم، کفوی برای حضرت بتول (سلام الله علیها) در عالم وجود نداشته، جز حضرت امیرِ عالم، علی (علیه السلام):\n«لَوْلا أَنَّ اللَّهَ تَعَالَى خَلَقَ أَمِيرَ الْمُؤْمِنِينَ لَمْ يَكُنْ لِفَاطِمَةَ كُفْؤٌ عَلَى ظَهْرِ الْأَرْضِ.»<span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>\n\nتا آن‌جا که آن حضرت، یکی از افتخارات خویش را «زوج البتول» معرفی نمودند:\n«... أَنَا زَوْجُ الْبَتُولِ سَيِّدَةِ نِسَاءِ الْعَالَمِينَ»\n(من همسر بتول (علیها السلام) هستم؛ همان کسی که سرور زنان جهانیان است.)<span class="ref-link" onclick="toggleSource(this, 8)">[۸]</span><div class="inline-source-box"></div>\n\nآن حضرت بار دیگر در خطبه‌ای که در بازگشت از جنگ نهروان خواند، خود را با این لقب توصیف کرده است:\n«أَنَا زَوْجُ الْبَتُولِ سَيِّدَةِ نِسَاءِ الْعَالَمِينَ»<span class="ref-link" onclick="toggleSource(this, 9)">[۹]</span><div class="inline-source-box"></div>\n\nيَا لَيْتَ شِعْرِي فَمَنْ أَنُوحُ مِنْهُمُ *** وَ مَنْ لَهُ يُنْهَلُّ فَيْضُ أَدْمُعِي؟\nأَلِلَّوَصِيِّ حِينَ فِي مِحْرَابِهِ *** عُظِّمَ بِالسَّيْفِ وَ لَمَّا يَرْكَعِ؟\nأَمْ لِلْبَتُولِ فَاطِمٍ إِذْ صُدِّعَتْ *** عَنْ إِرْثِهَا الْحَقِّ بِأَمْرٍ مُجْمَعِ؟<span class="ref-link" onclick="toggleSource(this, 10)">[۱۰]</span><div class="inline-source-box"></div>\n\nای کاش می‌دانستم که برای کدام‌یک نوحه‌سرایی کنم و در غم چه کسی اشک دیدگانم را روان سازم:\nبرای وصی [علی علیه السلام] که در محرابش، پیش از آن‌که به رکوع رود، شمشیر بر فرق سرش فرود آمد؟\nیا برای بتول، فاطمه [سلام الله علیها] که به فرمان آنان از ارثش که حق مسلم او بود، محروم شد؟\nأَنَا زَوْجُ الْبَتُولِ سَيِّدَةِ نِسَاءِ الْعَالَمِينَ.`,
+          `بتول ثانی:\nعطر گل یاس، فضای اتاق مادر را پر کرده بود.\nدست پدر را گرفتم و به اتاق مادر بردم.\nنگاه پدر به سجادهٔ مادر گره خورد؛\nقامت خواهرم چنان در چادر مادر نشسته بود که گویی باز مادر را می‌دیدیم.\n\nای فدای تو و چشمای ترت خواهر جانم!\nای فدای تو که بوی مهربان چادرت مثل عطر گل‌های بهاریِ چادرِ مادر، جانِ تازه به وجودمون بخشید!\nای فدای تو که با یک نگاهت، غم از دل بابا بردی!\n«زینب! آرام جانم، روح و روانم...»\nاین زمزمهٔ پدر بود، وقتی خواهر را در آغوش کشیده بود.\n\nصَلَّى اللَّهُ عَلَيْكِ يَا سَيِّدَتِي وَ مَوْلاتِي\nيَا زَيْنَبُ الْكُبْرَى\nأَيَّتُهَا الْعَقِيلَةُ الْحَوْرَاءُ\nأَعْظَمَ اللَّهُ لَكِ الْأَجْرَ\nسَيِّدَتِي وَ مَوْلاتِي\nفِي مُصِيبَةِ أُمِّكِ الزَّهْرَاءِ\nيَا زَيْنَبُ الْكُبْرَى\nيَا زَيْنَبُ الْحَوْرَاءُ\nمَوْلاتِي أَغِيثِينِي\nمَوْلاتِي أَغِيثِينی\nمَوْلاتِي أَغِيثِينی\n\nیکی از القاب حضرت زینب (سلام الله علیها) «بتول ثانی» است<span class="ref-link" onclick="toggleSource(this, 11)">[۱۱]</span><div class="inline-source-box"></div>؛ و برخی او را «صِنْوُ الْبَتُول» یعنی شبیه، همتا و نظیر بتول نامیده‌اند<span class="ref-link" onclick="toggleSource(this, 12)">[۱۲]</span><div class="inline-source-box"></div>.\n«السرّ المستودع فيها»\n\nامیرالمؤمنین (علیه السلام) به خانه آمد:\n«فَمَا أَقْبَحَ الْخَضْرَاءَ وَ الْغَبْرَاءَ مِنْ بَعْدِكِ يَا فَاطِمَةُ!»<span class="ref-link" onclick="toggleSource(this, 13)">[۱۳]</span><div class="inline-source-box"></div> فرمود.\nوارد خانه شد. در و دیوار را می‌دید؛ نزدیک بود قالب تهی کند. امیرالمؤمنین (علیه السلام) نظری کرد؛ سجادهٔ خانم پهن است. حضرت عقیله (سلام الله علیها) ایستاده، چادر مادر به سر کرده، نماز در سجادهٔ مادر می‌خواند. صورت فاطمه را در صورت زینتِ پدر دید، زینبش را قائم در سجادهٔ مادر دید؛ علی آرام شد، آرام...\n\n«السرّ المستودع فيها»...\n\nصَلَّى اللَّهُ عَلَيْكِ يَا سَيِّدَتِي أَيَّتُهَا الْعَقِيلَةُ الْحَوْرَاءُ.\nبه یک روایتی «السرّ المستودع فيها»، زینب کبری (سلام الله علیها)، زینتِ أب است؛ چگونه جان علی، جان حسین، جان زین‌العابدین (علیهم السلام) را نجات داده است...\nیا زینب کبری! مولاتی اغیثینی...\nالسرِّ المُسْتَوْدَعِ فِيهَا...`,
+          `شب‌های جمعه، حضرت ملیکهٔ عالم، حضرت صاحبِ وجود، امّ‌الأئمة و الأبرار، سراسیمه و پریشان به نینوای حسین می‌آیند، به کربلای حسین می‌آیند...\nشب‌های جمعه فاطمه (سلام الله علیها) زائر ابی‌عبدالله (علیه السلام) است...\n\nنمی‌دانم بعد از کربلا به زیارت حضرت عقیله هم می‌روید حضرت مادر؟\nنمی‌دانم دمشق هم سر می‌زنید بانو؟\n\nدر این شب‌ها بیش از همهٔ شب‌ها به حرم دخترتون عنایت کنید خانم...\nاین شب‌ها بعد از کربلا، سری هم به دمشق، حرم حضرت عقیله (سلام الله علیها) بزنید...\n\nالان خانهٔ امیرالمؤمنین (علیه السلام)، خانه‌تان، تمام مسئولیت مادری‌تان بر دوش عقیله‌خاتون (سلام الله علیها) افتاده؛ بر دوش حضرت خانم، زینبِ علی (علیهم السلام) است...\n\nاز بالای تل نگاهی کرد به گودی قتلگاه؛ چنان سراسیمه به سوی گودی قتلگاه دوید...\nهمچون امیرِ عالم زمانی که خبر دادند: اگر می‌خواهی فاطمه را ببینی خودت را به خانه برسان... همان‌گونه که علی (علیه السلام) خود را از مسجد به خانه رساند، زینب (سلام الله علیها) از تل خود را به گودی رساند...\nعبا به زیر پای علی، عمامه از سر افتاد...\nعبا به زیر پای زینب، با صورت بر زمین افتاد...\n\nسحرخیز مدینه کی می‌آیی؟\nآقاجانم! مادرتان چشم‌انتظاره؛ به خاطر مادرتان بیا...\nدوای درد سینه! به خاطر مادرتان بیا...\n\nالهی به حق اشک‌های امیرالمؤمنین (علیه السلام) که خانم با دستان شکسته از روی گونهٔ مبارک علی (علیه السلام) بر صورت خود نشاند...\nبه حق آن اشک‌های مظلومانهٔ علی (علیه السلام)...\nبه حق جگر سوختهٔ امام حسن (علیه السلام)، به یاد کوچه‌های بنی‌هاشم...\nبه حق جگر سوختهٔ امام حسن (علیه السلام)، به یاد کوچه‌های بنی‌هاشم...\nکی؟\nآن زمان که دست مادر را امام حسن (علیه السلام) گرفته بود، از میان کوچه‌ها مادر را به خانه می‌رساند...\n\nعَجِّلْ لِوَلِيِّكَ الْفَرَجَ\nعَجِّلْ لِمَوْلانَا الْمَظْلُومِ الْفَرَجَ\nعَجِّلْ لِمَوْلانَا الْغَرِيبِ الْفَرَجَ\n\nيَا رَبَّ الْبَتُولِ\nبِحَقِّ الْبَتُولِ\nاشْفِ صَدْرَ الْبَتُولِ\nبِظُهُورِ الْحُجَّةِ`
+        ]
+      },
+
+      {
+        title: "رایحه سوم",
+        name: "مبارکه",
+        bgImage: "scroll-bg-mobarakeh.jpg",
+        quote: "«استشمام رایحه و بوی خوش چشمهٔ جوشانِ کوثر و خیرِ کثیرِ جاویدان از آستان مقدس فاطمی»",
+        sources: {
+          1: "تفسیر مجمع البیان، ج ۱۰، ص ۸۳۶؛ «أن الكوثر هو كثرة النسل والذرية، وقد ظهرت البركة في ذريته صلى الله عليه وآله من ولد فاطمة عليها السلام بحيث لا يحصى عددهم، ومتدّ ذلك إلى يوم القيامة».",
+          2: "المفردات في غريب القرآن، ص ۱۱۹، ماده «برك».",
+          3: "دلائل الإمامة، ص ۷۹؛ بحار الأنوار، علامه مجلسی، ج ۴۳، ص ۱۰ و ص ۱۶.",
+          4: "سوره مبارکه نمل، آیه ۸.",
+          5: "جنّة العاصمة، ص ۱۱۸.",
+          6: "بحار الأنوار، ج ۴۳، ص ۲ تا ۴.",
+          7: "بحار الأنوار، ج ۴۳، ص ۳؛ الخصائص الفاطمیة، ص ۳۵."
+        },
+        parts: [
+          `شیخ طبرسی در مجمع البیان در تفسیر سوره کوثر می نویسد:\n\nمراد از کوثر همان زیادی نسل از فاطمه (سلام الله علیها) و اولاد رسول خداست که آنچنان فزونی یافتند که عددشان را نمی توان شماره کرد و این برکت تا قیامت ادامه خواهد یافت.<span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\n\nو این همان تعبیر راغب در مفردات است، جایی که خیر الهی به صورتی که قابل نگهداری و شمارش و اندازه گیری و محدود کردن نباشد، و هر کس به آن بنگرد، فزونی محسوسی در آن خیر می بیند، گویند در آن برکت است و آن موضع، مبارک و مبارکه است.<span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>`,
+          `مشتق از برکت، به معنای نفع زیاد آنکه دست توسل بر دامن او زنند چنان نفعی رساند و رستگار گرداند؛ پس بدین نام مدحش نمودند<span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\n\n«بُورِك مَنْ فِي النَّارِ وَمَنْ حَوْلَهَا»<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>\n\nبرکت، امر دینی است که بدست پیامبران در سرزمین ها و اطراف آن آشکار شد.\n\nکامل شدن و ظهور نهایی دین خدا پس از شهادت پیامبر (صلی الله علیه و آله) به وجود مبارک حضرت فاطمه زهرا (علیها السلام) محقق شد که به وسیله اولاد طیبین و فرزندان از نسل او تا قیام قیامت به نهایت مرتبه کمال ظاهر می شود و اینها همگی در اثر وجود پر خیر و مبارک آن بانوی بزرگوار است<span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>`,
+          `خدیجه (سلام الله علیها) محو روشنایی اش بود از مشرق تا مغرب زمین، فرصتی برای تاریکی نگذاشت، حور العین وارد شدند، کوثر را با آب کوثر شستند، جامه سعیدی دورش پیچیدند؛ نزدیک خود آورد، بوی مشک، می داد. این بار نور از کلماتش سرازیر شده به هر یک از زنان سلام کرد.<span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>\n\nو آسمان از مژده ولادت او پر شد، بگیر این مولود را خدیجه در حالتی که پاک و پاکیزه و فرخنده و برکت داده شده است در او و در نسل او.<span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>`,
+          `أم أبيها أنجبت أئمة\nهم سادة الخلق وهم أهل الوفي\nلكن ما قد خانت الدنيا بهم\nمنا إذا قلنا على الدهر عفى\n\nاو مادر پدرش می باشد و امامان از او به وجود آمده اند که سروران خلق و اهل وفا و بزرگواری اند دنیا به آنان خیانت کرد و اگر در این صورت بگوییم خاک بر سر روزگار باد، به درستی و راستی سخن گفته ایم.`,
+          `خدایا! به اشك مادر تنها که هنوز هم در دل نیمه شب های غیبت از غم غربت آخرین فرزند جاری می شوند..... برسان یوسف تنهای زهرا را...`
+        ]
+      },
+
+      {
+        title: "رایحه چهارم",
+        name: "محدثه",
+        bgImage: "scroll-bg-mohaddaseh.jpg",
+        quote: "«استشمام رایحه و بوی خوش نجوایِ قدسیان و ملکوتیان از آستان مقدس فاطمی»",
+        sources: {
+          1: "فرازی از زیارتنامه حضرت فاطمه زهرا (سلام‌الله‌علیها).",
+          2: "علل الشرائع، ج ۱، ص ۱۸۲.",
+          3: "سوره مبارکه آل عمران، آیه ۴۲.",
+          4: "دلائل الإمامة، ص ۸۱؛ بحار الأنوار، ج ۴۳، ص ۷۸.",
+          5: "علل الشرائع، ج ۱، ص ۱۸۲؛ بحار الأنوار، ج ۴۳، ص ۷۹.",
+          6: "بحار الأنوار، ج ۴۳، ص ۴، ح ۳ و ج ۵۷، ص ۱۹۱.",
+          7: "روضة الواعظین، ج ۱، ص ۱۴۳ و ۱۴۴؛ بحار الأنوار، ج ۴۳، ص ۲.",
+          8: "الکافی، ج ۱، ص ۲۴۱؛ بحار الأنوار، ج ۲۶، ص ۴۱.",
+          9: "تفسیر القمی، ج ۲، ص ۲۱؛ بحار الأنوار، ج ۵۲، ص ۳۱۳.",
+          10: "کمال الدین و تمام النعمة، ج ۲، ص ۳۷۷؛ غیبت نعمانی، ص ۲۲۹.",
+          11: "کتاب سلیم بن قیس الهلالی، ج ۲، ص ۶۶۴؛ بحار الأنوار، ج ۵۳، ص ۱۸۰."
+        },
+        parts: [
+          `«السلام علیک ایتها المحدثة العلیمة»<span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\n\nحضرت فاطمه بنت محمد رسول الله (صلی الله علیه و آله و سلم) را "مُحَدِّثه" نامیده‌اند؛ بانویی که نجوای آسمان را بر زمین جاری ساخت و صدای زمین را به عرش الهی پیوند زد و از ازل تا ابد، سِلسله‌ای از "حدیث" جریان دارد که یک سوی آن، کلام نور و جانب دیگر، قلب مطهر صدیقه کبری، حضرت فاطمه زهرا (سلام‌الله علیها) است.<span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>\n\n«إِنَّ اللَّهَ اصْطَفَاكِ وَطَهَّرَكِ وَاصْطَفَاكِ عَلَى نِسَاءِ الْعَالَمِينَ»<span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\n\nبه درستی که خداوند تو را برگزید و پاک گردانید و تو را بر زنان عالمیان (جهانیان) برتری بخشید.\n\nملائکِ عرش مشتاقانه فرود می‌آمدند و او را به نام ندا می‌دادند؛ ندایی که پیش‌تر، تنها مریم بنت عمران آن را شنیده بود.<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div> مریم اگرچه سخن فرشتگان را می‌شنید اما تنها بانوی برتر دوران خود بود؛ فاطمه (سلام الله علیها) اما سَروَرِ زنانِ عالَم، از آغاز تا انجام است، با فرشتگان سخن می‌گفت و آنان نیز با او به گفتگو می‌پرداختند.<span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>\n\nصدایِ او، صدایِ زمین را به آسمان وصل کرد و حدیث او، میراثی از علم و نور شد. او برترین محدثه‌یِ عالم خلقت است.`,
+          `محدثه یِ ازلي\n\nپیش از آنکه جهان آفریده شود، در جایی که نه آسمانی بود و نه زمینی، و خورشید هنوز طلوع نکرده بود، "نوری" درخشید که خود سرچشمه‌ی همه معانی بود.\n\nاین نور بی‌کران، وجود مقدس حضرت فاطمه (سلام الله علیها) بود که در پیشگاه الهی به تسبیح و ستایش پروردگار مشغول بود.\n\nصدای این نیایش، نخستین حدیث ملکوت بود؛ آوایی چنان زیبا و باشکوه که فرشتگان در برابرش، آداب پرستش و شیوه‌ی ستایش را آموختند.\n\nاین، آغاز "محدثه" بودن او بود؛ چرا که وجودش خود، صحیفه ای از یاد خدا و سپاس او بود.<span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>`,
+          `حديث محدثه با مادر\n\nهنوز ماهِ خانهٔ خدیجه کبری (سلام الله عليها) از ابرِ غربت و رنج، رخسار نگشوده بود. مکه، در تب‌و‌تاب جهل، بر پیکر خستهٔ بانوی قریش، خارهای طعنه می‌کاشت. در آن انزوای جان‌سوز، هنگامی که خدیجه کبری (سلام الله عليها)، سنگ‌بارانِ طعنۀ مشرکان را بر جان خریداری می‌کرد، ندایی از درون، مونس تنهایی‌اش شد.\n\nفاطمه (سلام الله عليها) هنوز در گهوارهٔ پنهانِ رحم، قامت برنیاورده بود که زبان گشود. با مادرش هم‌زبان شد و با دلِ او سخن گفت. نجوای ملکوتی او که از فراسوی زمان و مکان می‌آمد، بر زخم‌های خدیجه کبری (سلام الله عليها) مرهم نهاد و جانش را به باران امید شست. گویی رسالت او از همان آغاز، پیوند زدن غربت زمینی به انس آسمانی بود.\n\n«...فلمّا حملتْ بفاطمة كانت فاطمة عليها السّلام تحدّثها من بطنها وتُصبّرها ...».<span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>`,
+          `مصحف قدسی محدثه\n\nغروب شد...\n\nو آفتاب رسالت در افق مدینه غروب کرد. دل عالم، از این فراق، تکه تکه شده بود. فاطمه (سلام الله علیها) مانده بود با دریایی از غم و آتشی در سینه.\n\nدر آن ایام سخت، وقتی نفس‌ها در سینه حبس شده بود و زمانه، سنگ‌دلانه به ماتم نشسته بود، فرشته‌ای از سوی پروردگار نازل شد. جبرئیل، این پیک آسمانی، به خانه‌ای آمد که دیگر خبری از نبوت نمی‌شنید، اما بوی وحی از آن برمی‌خاست.\n\nاو می‌آمد تا با دختر پیامبر سخن بگوید. برای تسلی دل شکسته‌اش... برای آرامش قلب آتشین‌اش... و برای پیوند دوباره زمین به آسمان.\n\nاین دیدارها، این نجواهای قدسی، گنجینه‌ای شد از علم و معرفت. جبرئیل می‌گفت و فاطمه (سلام الله علیها) می‌شنید. علی (علیه السلام) می‌نوشت... و این‌گونه شد که "مصحف فاطمه" پدید آمد. کتابی آسمانی، پر از اسرار هستی، که میراث امامان شد و نشانه‌ای گویا از مقام محدثه بودن بانوی ما.\n\n«... ان فاطمه مکثت بعد رسول‏ اللَّه خمسة و سبعین یوما و قد کان دخلها حزن شدید على ابیها، و کان جبرئیل یاتیها فیحسن عزاها على ابیها، و یطیب نفسها، و یخبرها عن ابیها و مکانه و یخبرها بما یکون بعدها فى ذریتها، و کان علىُّ یکتب ذلک فهذا مصحف فاطمة».<span class="ref-link" onclick="toggleSource(this, 8)">[۸]</span><div class="inline-source-box"></div>`,
+          `حدیثِ بی‌پایانِ محدثه‌ی عالم\n\nو سپس، فصلی از تاریخ رقم خورد که آسمان بگریست و زمین به لرزه درآمد. آتش و خون، حریم نبوت را درنوردید و شاخسار رسالت را شکست. در آن لحظاتِ جانگداز، وقتی که خارهای غربت بر جانِ بانوی بهشت نشست، صدایی از اعماق تاریخ برخاست:\n\n"یا بُنَیَّ... ای فرزندم!"\n\nاین ندایی نبود که در دیوارهای زمان محبوس بماند. این، حدیثی بود که از قلبِ خونینِ فاطمه(سلام الله علیها) جوشید و تا ابدیت را درنوردید.\n\nحدیثی از جنسِ اشک و آتش...\nاز جنسِ وصیت و وداع...\nاز جنسِ دلتنگیِ مادری که آخرین ذخیره‌ی الهی را به امانت می‌سپارد.\n\nو اینک، در فراسوی قرن‌ها، امامی در غربتِ زمان می‌ایستد و در خلوتِ خویش، با یاد آن ناله‌های مادرانه، از چشمانِ مقدس‌اش خون می‌گرید.\n\nآری... این اشک‌ها، پاسخِ غربت به غربت است. این درد، وصالِ جان‌سوزِ مادری است با فرزندی که تاریخ، آنان را جدا کرد اما روحشان در آتشِ یک عشق همچنان متحد است.\n\nو این، اوجِ حدیثِ مُحَدَّثه است: سخنی که از عرش آغاز شد و در عرشِ انتقام به کمال خواهد رسید.<span class="ref-link" onclick="toggleSource(this, 9)">[۹]</span><div class="inline-source-box"></div>\n\nاین حدیث، امانتی است از سرِّ ولایت که در قلبِ امامِ زمان همچون آتشی نهفته و در روزِ ظهور، همه‌ی تاریخ را روشن خواهد کرد.<span class="ref-link" onclick="toggleSource(this, 10)">[۱۰]</span><div class="inline-source-box"></div>\n\nای فرزندان فاطمه (سلام الله علیها)!\n\nاین ندا، میراثِ شماست.\nاین اشک، نشانه ای است برای شناختِ حق از باطل.\nاین درد، معیاری است برای سنجشِ وفا و خیانت.\n\nبدانید: آتشِ آن زخمِ کهن، جز با دفاعِ جانانه از حریمِ ولایت و معرفتی عمیق به مقامِ فرزندِ خاتم تسکین نخواهد یافت.<span class="ref-link" onclick="toggleSource(this, 11)">[۱۱]</span><div class="inline-source-box"></div>\n\n"یا بُنَیَّ..."\n\nاین ندای همیشه جاری...\nاین پیوندِ ناگسستنی...\nاین وعده‌ی انتظار...\n\nو این، حدیثِ بی‌پایانِ محدثه‌ی عالم است که تا قیامت، در گوشِ زمان زمزمه خواهد شد.`
+        ]
+      },
+
+      {
+        title: "رایحه پنجم",
+        name: "راضیه",
+        bgImage: "scroll-bg-raziyeh.jpg",
+        quote: "«استشمام رایحه و بوی خوش رضا و تسلیم در برابر تقدیر الهی از آستان مقدس فاطمی»",
+        sources: {
+          1: "بحار الأنوار، ج ۴۳، ص ۱۵.",
+          2: "التهذیب، ج ۳، ص ۶۷؛ إقبال الأعمال، ص ۶۲۵.",
+          3: "فرازی از زیارتنامه حضرت زهرا (علیهاالسلام).",
+          4: "سوره مبارکه مائده، آیه ۱۱۹.",
+          5: "الخصال، ج ۲، ص ۴۱۴.",
+          6: "بحار الأنوار، ج ۴۳، ص ۱۴۹؛ فضائل الشيعة، ص ۵۴.",
+          7: "نهج البلاغه، خطبه ۲۷.",
+          8: "سوره مبارکه فجر، آیات ۲۷ تا ۳۰.",
+          9: "تفسیر العیاشی، ج ۲، ص ۳۴۸.",
+          10: "«اقْرَءُوا سُورَةَ الْفَجْرِ فِي فرائِضِكُمْ وَ نَوَافِلِكُمْ فَإِنَّهَا سُورَةُ الْحُسَيْنِ بْنِ عَلِيٍّ». ثواب الأعمال و عقاب الأعمال، ص ۱۲۳."
+        },
+        parts: [
+          `«فَاطِمَةُ رَاضِیَةٌ، رَضِیَتْ عَنِ اللهِ فِی کُلِّ مَا أَصَابَهَا...» <span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\nکه او از خدا در هر آنچه بر او گذشت، راضی بود.\nو آه از ردّ کبودی بازوی فاطمه‌ام...\n«لَعَنَ اللهُ قُنْفُذًا مَعَ مُغِیرَةَ» <span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>`,
+          `«السَّلامُ عَلَیْکِ أیَّتُهَا الصِّدّیقَةُ الشَّهیدَةُ، السَّلامُ عَلَیْکِ أیَّتُهَا الرَّاضِیَةُ المَرْضِیَّةُ...» <span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\n«...رَضِيَ اللَّهُ عَنْهُمْ وَ رَضُوا عَنْهُ ذلِكَ الْفَوْزُ الْعَظيمُ» <span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>؛ خداوند از آنان راضی و خرسند گشت و آنان نیز از خداوند؛ و این پیروزی بزرگی است.\n\nراضیه از دیگر نام‌های مبارکی است که خداوند تعالی به وجود حضرت مادر (سلام‌الله‌علیها) عطا نمود... <span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>\nنامی برگزیده و برازندهٔ دخت نبی...\nنام راضیه به قناعت و خرسندی معنا می‌بخشد.\nاز دیگر معانی آن «قانعه» است؛ کسی که به هر چه از جانب خداوند به او بخشیده می‌شود قناعت می‌ورزد و تنها خواسته‌اش رسیدن به پروردگار بی‌همتای خویش است. و چه زیبا این نام بر وجود حضرت مادر می‌نشیند...\nهمان‌طور که از لسان و کلام زیبای خودشان می‌فرمایند:\n«رَضِیتُ‏ بِاللَّهِ‏ رَبّاً وَ بِكَ يَا أَبَتَاهْ نَبِيّاً وَ بِابْنِ عَمِّي بَعْلًا وَ وَلِيّاً» <span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>؛ به پروردگاری خداوند، نبوت پدرم (صلی‌الله‌علیه‌وآله)، و ولایت و همسری پسرعمویم (حضرت علی علیه‌السلام) راضی و خشنود شدم.`,
+          `مادر...\nچه بسا همین بود راز آرامش پنهان میان دو چشمان مبارکتان... راز ملاحت چهرهٔ نورانی‌تان...\nو آه از آن شب‌های مدینه که ابر می‌بارید بر غصهٔ سینهٔ شکسته...\nو کدامین گوش مستمع و کدامین چشم بینا به درد پنهان آن صورت آگاه بود، آن هنگام که زیر لب نجوا می‌کردید:\n«أَشْبَاهَ الرِّجَالِ وَ لَا رِجَالاً!» <span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>، سجادهٔ مبارکی پهن می‌شد و گل‌های یاس عطر بهشت را در آغوش می‌کشیدند...\nاشک‌های حضرت زینب دانه‌های تسبیح شما می‌شوند و حسین آرام لیوان آبی را کنار سجاده گذاشت...\nاما حسن... گوشه‌ای نشسته بود و به شما خیره نگاه می‌کرد...\nاصلا بعد از آن کوچه لحظه‌ای نگاه از مادر برنداشت...\nو سکوتی دارد به بلندای فریادی تا عرش خدا...\nو حضرت امیرالکونین... آرام با دستانی که ردّ طناب بر آن مشهود بود، فاطمه‌اش را نظاره می‌کرد.\nحال عقربه‌های قلب علی بعدِ تو دیگر میلی به حرکت ندارد؛ شمشیر قدرتش شکسته و لشکرش بی‌سپاه شده؛ خورشید دلش دیگر میلی به طلوع ندارد؛ روزگار دلش روشنایی ندارد و زمینِ وجودش نفس کشیدن را فراموش کرده...\nاین خانه نیاز دارد لَیْلَةُ الْقَدْرِ دیگری را مادر، تا صبح برای مظلومیت اهلش گریه کند...`,
+          `بوی حرم گرفتیم از عطر سیب مادر...\n«یا أَيَّتُهَا النَّفْسُ الْمُطْمَئِنَّةُ * ارْجِعِي إِلى رَبِّكِ راضِيَةً مَرْضِيَّةً * فَادْخُلِي فِي عِبادِي * وَ ادْخُلِي جَنَّتِي» <span class="ref-link" onclick="toggleSource(this, 8)">[۸]</span><div class="inline-source-box"></div>؛\nای نفس مطمئنه، خشنود و خداپسند به سوی پروردگارت بازگرد، در میان بندگان من درآی و در بهشت من داخل شو.\nو این ارث مادری به پسر بود...\nمنظور از «نفس مطمئنهٔ راضیه مرضیه» در معنای کامل و مطلق آن، حضرت اباعبدالله الحسین (علیه‌السلام) می‌باشد:\nعَنْ أَبِی عَبْدِ اللهِ (عَلَیْهِ السَّلَامُ) فِی قَوْلِهِ:\n«یا أَیَّتُهَا النَّفْسُ الْمُطْمَئِنَّةُ * ارْجِعِی إِلى رَبِّكِ راضِیَةً مَرْضِیَّةً»، «یَعْنِی الْحُسَیْنَ بْنَ عَلِیٍّ (عَلَیْهِ السَّلَامُ)». <span class="ref-link" onclick="toggleSource(this, 9)">[۹]</span><div class="inline-source-box"></div>\nبه همین علت سورهٔ فجر، «سورة الحسین (علیه‌السلام)» نامیده شده است و اختصاص به آن حضرت دارد. <span class="ref-link" onclick="toggleSource(this, 10)">[۱۰]</span><div class="inline-source-box"></div>\nو شمیم یاس مادر باز هم از حرم حسینش می‌آید...\nهنگامی که باد، چادر خاکیِ تو را به اهتزاز در می‌آورد و عطرِ مادری‌ات را به تمام عاشقانت می‌رساند؛ از کرب‌وبلای پسر... تا چادر خاکی مادر... بلکه با عاشقی زیر بیرق نور چشمی‌تان سراسیمه به تار چادر خاکی چنگ زنیم و زیر سایهٔ شفاعتتان قرار بگیریم.`,
+          `ای «سرّ مستودع فیها»!\nای آرامش قلب مادر به هنگام استیصال!\nتو را قسم به رضای آن دل‌شکسته، به اشکی که در سکوت شب ریخته شد،به صبری که زمین تاب نیاورد، به نگاهی که از درد هنوز هم مهربان بود، به لبخندهای میان اشک، و به نجوای «رِضاً بِقَضَائِکَ یَا إِلَهِی».\nرضا کن به آمدنت تا زمین دوباره آرام گیرد...`
+        ]
+      },
+
+      {
+        title: "رایحه ششم",
+        name: "مرضیه",
+        bgImage: "scroll-bg-marziyeh.jpg",
+        quote: "«استشمام رایحه و بوی خوش رضوانِ ربوبی از آستان مقدس فاطمی»",
+        sources: {
+          1: "فرازی از دعای حضرت صدیقه کبری سلام الله علیها",
+          2: "سوره مبارکه بقره آیه ۲۰۷.",
+          3: "بحار الأنوار، ج ‏۲۹، ص ۱۵۸. (مَنْ آذَی فَاطِمَةَ فَقَدْ آذَانِی وَ مَنْ آذَانِی فَقَدْ آذَی اللَّهَ)",
+          4: "سوره احزاب، آیه ۵۷.",
+          5: "بحار الأنوار، ج ‏۴۳، ص ۵۴.",
+          6: "بحار الأنوار، ج ‏۳۸، ص ۱۹۷.",
+          7: "فرازی از زیارت ناحیه مقدسه.",
+          8: "سوره فجر، آیه ۲۸."
+        },
+        parts: [
+          `السَّلامُ عَلَيْكِ أَيَّتُهَا الرَّضِيَّةُ الْمَرْضِيَّةُ <span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\nسلام بر تو ای خشنود از خدا و خدا خشنود از تو\n\nبسم الله الرحمن الرحیم \n\n«وَ مِنَ النَّاسِ مَنْ يَشْري نَفْسَهُ ابْتِغاءَ مَرْضاتِ اللهِ وَ أللهُ رَؤُفٌ بِالْعِبادِ» <span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>\nو برخی مردم جان خویش را در طلب خشنودی خداوند فدا می کنند و خداوند نسبت به بندگان مهربان است.\n\nآیه مبارکه فوق در معرفی مقام «فدایی شدن و بذل جان» در راه حضرت حق است؛ مدح کسی ست که در راه دعوت بندگان به اطاعت از پروردگار، هر گونه بلایی را به جان می خرد و نفس و هوایی در مقابل خواست و اراده مولایش نداشته و تسلیم ربّ می باشد.\n\nچنانکه امام حسن العسکری (علیه السلام) فرمودند:\n\n«و آنکه جان خویش را فدا می کند» یعنی می فروشد «در راه رضای خداوند» <span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>\nپس اطاعت خدا را به جا آورده و مردم را به آن امر می نماید و در این راه هر آزار و اذیتی را تحمل می کند؛ او همچون کسی است که جانش را معامله کرد و جانش را تسلیم نمود، در مقابل جلب رضایت خداوند؛ پس دیگر برایش مهم نیست که پس از آن چه بلایی بر سر او بیاید؟!`,
+          `علامه مجلسی در کتاب بحارالانوار نام مبارک مرضیه را اینگونه معنا کرده است: آن که خداوند پیوسته از او و کردارش راضی است.\n\nاز آنجا که آن حضرت تمام اعمال، افعال و اقوال شان همان خواسته الهی است، اگر او از چیزی خرسند باشد نشان خرسندی خداست و در صورتی که نسبت به کسی یا عملی ناخرسند باشد دلیل مبغوض بودن آن چیز یا کس نزد خداست.\n\nرسول اکرم (صلوات الله عليه) درباره بهجة قلب مبارک شان فرمودند: \n«آن که فاطمه را بیازارد مرا آزرده ساخته و کسی که مرا آزار رساند خداوند را ناخرسند و آزرده ساخته است.» <span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\n\nو این همان فرموده الهی است که:\n\n«إِنَّ الَّذِينَ يُؤْذُونَ اللَّهَ وَرَسُولَهُ لَعَنَهُمُ اللَّهُ فِي الدُّنْيَا وَالْآخِرَةِ وَأَعَدَّ لَهُمْ عَذَاباً مُهِيناً.» <span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>\n\nنیز فرمودند:\n\nإِنَّ اللَّهَ لَیَغْضَبُ لِغَضَبِ فَاطِمَةَ وَ یَرْضَی لِرِضَاهَا <span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>\nای فاطمه، خداوند همانا به غضب تو غضب می کند و به رضایتت خشنود می شود.`,
+          `پیامبر (صلی الله علیه و آله فرمودند: همانا نگریستن به علی بن ابی طالب (علیه السلام) عبادت است.\nو یاد کردن او عبادت است. <span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>\n\nخدای عز و جل به واسطه ولایت امیرالمؤمنین (علیه السلام) بر عباد الله راضی شد. لذا آن حضرت پسندیده خدای سبحان گردید و ملقب شد به مرتضی پس جلب رضایت خداوند متعال برای عباد الله، بواسطه ولایت على (عليه السلام) حاصل می گردد.`,
+          `مرضیه ی مرتضی\n\nآن دم که حسنین به مسجد آمدند و چشمان چون ابر بهاری شان را دیدم، ناگاه از هوش رفتم... \nفهمیدم علی دگر زهرا ندارد... \nدوان دوان به سمت خانه آمدم اما چند باری با صورت بر زمین خوردم... \nولی فدای سرت فاطمه جانم...\nبالاخره خود را رساندم به تو، به تو که همه ی وجود علی، تمام علی هستی...\n\nبه سمت زهرا از حجره دویدم من\nعدو جلوتر بود دیر رسیدم من \nفاطمه افتاد و ناله کشیدم من\nلگد به پهلوش خورد دیر رسیدم من\n\nسرت را از روی زمین بر روی بالینم گذاشتم، گونه های چون گلبرگ یاست را نوازش کردم، \nآرام صدایت کردم: ای دختر رسول خدا! \nپاسخی ندادی و قلبم بی حرکت ایستاد...\nدوباره صدایت کردم: ای فاطمه با من حرف بزن! \n«فاطمه منم علی!» \nناگهان چشمان بی رمقت را گشودی... \nنگاهم کردی و گریستی، \nمن با تو نیز گریستم. \nمی دانستم ندای مرتضی ات را بی جواب نمی گذاری...`,
+          `فاطمه رَاضِيَةٌ، رَضِيَتْ عَنْ اللَّهِ فِي كُلِّ مَا أَصَابَهَا فاطمه (سلام الله علیها) راضیه است....\n\nاما خانم مسمی شدن به اسم مبارکه مرضیه! \nچرا که در این وادی، عشق به منصه ظهور می رسد... \nراضی است از هر آنچه که به او می رسد اما رضایت مرتضی و مولایش تقدم بر رضایت خویش دارد.\n\nیکی درد و یکی درمان پسندد\nیک وصل و یکی هجران پسندد\nمن از درمان و درد و وصل و هجران \nپسندم آنچه را جانان پسندد\n\nآن زمانی که تمام پاره های تنش را که اولین آنان حضرت محسن (علیه السلام) بود، در آغوش خود گرفت تا برای دفاع از وجه الله قیام کند و پروانه وار برای معنا کردن حقيقة العبودية در آتش جان بگیرد.\n\nاولین جایی است که مَنْ يَشْرِي نَفْسَهُ ابْتِغاء مَرضاتِ الله معنا می گیرد...`,
+          `السَّلامُ عَلَی أبى الفَضلِ العَبّاسِ بنِ أمیرِ المُؤمِنینَ، المُواسى أخاهُ بِنَفسِهِ، الآخِذِ لِغَدِهِ مِن أمسِهِ، الفَادى لَهُ الواقى. <span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>\nسلام بر عباسی که با دادن جان خود با برادر همدردی نمود.\n\nعشق در کربلا به کامل ترین معنا رسید و در وجود ابوالفضل العباس (علیه السلام) تجلی یافت.`
+        ]
+      },
+
+      {
+        title: "رایحه هفتم",
+        name: "صدیقه",
+        bgImage: "scroll-bg-seddiqeh.jpg",
+        quote: "«استشمام رایحه و بوی خوش صدق و شهادت بر ولایت از آستان مقدس فاطمی»",
+        sources: {
+          1: "زیارتنامه حضرت زهرا سلام الله علیها.",
+          2: "بحارالأنوار، ج ۴۳، ص ۲۱۵.",
+          3: "کافی، ج ۱، ص ۴۵۸.",
+          4: "کافی، ج ۱، ص ۴۱۷.",
+          5: "دلائل الإمامة، ص ۱۰.",
+          6: "امالی صدوق، ص ۴۲.",
+          7: "بيت الأحزان، ص ۱۲۱.",
+          8: "سوره مبارکه احزاب، آیه ۲۳."
+        },
+        parts: [
+          `«السلام علیک ایتها الصدیقةالشهيدة» <span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>\nحضرت فاطمه بنت محمد رسول الله (صلی الله علیه و آله و سلم) ملقب به «صدیقه» می باشند <span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>؛\nبانویی که از آغاز تا همیشه برای تصدیق تنها حقیقت عوالم، یعنی ولایت، درخشید.\n\nنور مبارک او چنان جهان را روشن ساخت که حقیقت ولایت در تمامی کائنات از آسمان‌های هفت‌گانه تا زمین خاکی، به وضوح و در تمامی ابعاد خود نمایان شد.<span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>\nصدقِ حضرت فاطمه (سلام‌الله‌علیها) نه تنها در گفتار و عملِ ایشان، بلکه در تکاملِ عهدِ الهی و ولایت علوی تجلی یافته است.\n\nهمان‌طور که در روایت آمده است:\n«الصِّدْقُ وَلَايَتُنَا أَهْلَ الْبَيْتِ»<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>؛\nصدقِ حقیقی یعنی ولایت اهل بیت (علیهم السلام).\n\nو چون سیره مقدس فاطمی به تمامیت رساندن این عهد الهی بود،\nپس تمامی هستی در مدار معرفت ایشان به گردش درآمد.\n\nچنانکه حضرت صادق (علیه‌السلام) فرمودند:\n«ایشان صدّیقه کبری است و قرون اولیه بر محور شناخت و معرفت ایشان می‌چرخید.»<span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>`,
+          `«صدیقه کبری، \nبرزخ میان صدیق اکبر حقیقی و دروغین»\n\nدر روزگاری که ظلمت، خورشید را به افول می خواند و پرده های فریب، چشمان خفته را می فریفت، وجودی مقدس می بایست تا چنان خورشیدی در برزخ حیرت بتابد و مرز نور از ظلمت را به تمامی بنمایاند.\nحضرت صدیقه کبری (سلام الله علیها) آن برزخِ رفیع بودند.\nایشان میان «صدیق اکبر حقیقی» <span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>، مولی الموحدین علی (علیه السلام)، و «صدیق اکبر دروغین»، طاغوت زمان ایستادند.\nآنگاه که هجوم تاریکی به حریم امامت و ولایت آغاز شد، آن بانوی آسمانی، پشت درب خانه ایستادند.\nخطاب آتشین ایشان که «أیّها الضالّون المكذّبون... طغیانك یا شقیّ! أخرجني، و ألزمك الحجّة»<span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div> طوفانی بود که سراب را از آب زلال جدا می کرد.\nهمینجا بود که حضرت صدیقه کبری (سلام الله علیها) ولایت علوی را نه تنها در قالب کلام که در هیئت عمل و ایثار نیز به منصهٔ ظهور رساندند.\nچنان عهد ولایت را به تمامیت و کمال اثبات نمودند که هیچ شک و شبهه ای برای هیچ جویندهٔ حقیقی باقی نماند.\nنور امامت را معرفی کردند و چهرهٔ کریه اولیاء طاغوت را برملا ساختند.\nاینجا بود که «صدق» به اوج خود رسید؛ صدقی که در وفاداری بی چون و چرا به ولایت، و افشاگری بی پروا علیه باطل متجلی شد.`,
+          `«عروج صدیقه»\n\nسرشت حضرت صدیقه کبری (سلام الله علیها) ترجمان «الصدق ولایتنا» بود، چنان که وجود مقدسش، سند ناطق و مجسم ولایت بود، سندی که هر ورقش با نور صدق رقم خورده بود.\n\nآنگاه که سپاه تاریکی قصد تحریف این کتاب الهی را کرد، صدیقۀ کبری دریافت زمان «قضای نَحب»<span class="ref-link" onclick="toggleSource(this, 8)">[۸]</span><div class="inline-source-box"></div> فرارسیده است.\nاین نَحب، امضای خونین بر پای سند ازلی «إنَّ الْعَهْدَ كَانَ مَسْؤُولاً» بود.`
+        ]
+      },
+
+      {
+        title: "رایحه هشتم",
+        name: "زهرا",
+        bgImage: "scroll-bg-zahra.jpg",
+        quote: "«استشمام رایحه و بوی خوش درخششِ انوارِ قدسیِ بر پهنهٔ عرش و فرش از آستان مقدس فاطمی»",
+        sources: {
+          1: "بحار الأنوار، ج۴۳، ص۱۲؛ كشف الغمة، ج۱، ص۴۶۴؛ عوالم العلوم، ج۱۱، ص۷۶.",
+          2: "بحار الأنوار، ج ۳۷، ص ۸۲.",
+          3: "عوالم العلوم، ج ۱۱، ص ۲۲.",
+          4: "معاني الأخبار، ج ۱، ص ۶۴.",
+          5: "بحار الأنوار، ج۲۴، ص۷۴؛ معاني الأخبار، ج ۱، ص ۱۱۴.",
+          6: "بحارالانوار، ج ۴۳، ص ۱۱؛ علل‏ الشرايع، ج ۱، ص ۱۸۰؛ جنه العاصمه، ص ۵۸.",
+          7: "سوره اعراف، آیه ۱۷۹."
+        },
+        parts: [
+          `قالت فاطمه (سلام الله عليها): أنا الزهراء
+
+یکی از اسماء و القاب مبارک حضرت سيدة نساء العالمین (سلام الله عليها) که از جانب ذات اقدس الهی به این نام تسمیه شده اند، نام مبارکه «زهراء» است.
+
+در آغاز خلقت پیش از آنکه خورشید بر زمین بتابد و ماه بر آسمان بدرخشد، پرتویی از نور عظمت الهی در پهنه هستی تابیدن گرفت، نوری بی بدیل که سرچشمه اش ذات بی کران خداوند بود.
+
+این نور، چنان درخشید که آسمان ها و زمین به نور و رحمت و صفا آراسته شدند. 
+فرشتگان، که از عظمت ضیاء این نور و اشراق آسمان ها و زمین، خویش را مبهوت و حیران می دیدند، و در برابر خداوند به سجده افتاده بودند، پرسیدند: «ای پروردگارا این چه نوری است؟»
+
+ندا آمد و بر ایشان وحی شد: 
+این نور، پرتویی از نور من است و او را در آسمان سکنی خواهم داد، او از صلب نبی ای است که افضل جميع انبیاء است. 
+و ائمه ای از این نور خواهند آمد که به امر من قیام خواهند کرد و به حق من هدایت می کنند و ایشان را جانشینان خویش در زمین پس از انقطاع وحی ام قرار خواهم داد.
+
+و این گونه فاطمه، زهراء خوانده شد.
+
+درخشش او، همه آفرینش را به سپیدی و روشنی سوق داد. 
+و امامانی برگزیده، از دامان او برخواستند که پس از خاموشی وحی، چراغ هدایت انسان ها گردیدند. 
+و چه چیز می تواند وصف کند عظمت این جلال و زیبایی و درخشش را ؟! 
+که ملائکه ای که خود از نور، خلق شده اند، از این همه شکوه به سجده افتادند!`,
+
+          `خلقت از نور عظمت الهی
+
+امام صادق (علیه السلام) ضمن حدیثی در خصوص خلقت نورانی اهل بیت (علیهم السلام) به وجه تسمیه ی آن حضرت به نام مقدس «زهراء» اشاره کردند:
+
+«لِمَ سُمِّيَتْ فَاطِمَةُ اَلزَّهْرَاءُ زَهْرَاءَ؟ 
+فَقَالَ: لِأَنَّ اَللَّهَ عَزَّ وَ جَلَّ خَلَقَهَا مِنْ نُورِ عَظَمَتِهِ، فَلَمَّا أَشْرَقَتْ أَضَاءَتْ اَلسَّمَاوَاتِ وَ اَلْأَرْضَ بِنُورِهَا وَ غَشِيَتْ أَبْصَارَ اَلْمَلاَئِكَةِ وَ خَرَّتِ اَلْمَلاَئِكَةُ لِلَّهِ سَاجِدِينَ 
+وَ قَالُوا: إِلَهَنَا وَ سَيِّدَنَا! مَا هَذَا اَلنُّورُ؟ 
+فَأَوْحَى اَللَّهُ إِلَيْهِمْ: هَذَا نُورٌ مِنْ نُورِي وَ أَسْكَنْتُهُ فِي سَمَائِي خَلَقْتُهُ مِنْ عَظَمَتِي أُخْرِجُهُ مِنْ صُلْبِ نَبِيٍّ مِنْ أَنْبِيَائِي أُفَضِّلُهُ عَلَى جَمِيعِ اَلْأَنْبِيَاءِ وَ أُخْرِجُ مِنْ ذَلِكَ اَلنُّورِ أَئِمَّةً يَقُومُونَ بِأَمْرِي يَهْدُونَ إِلَى حَقِّي وَ أَجْعَلُهُمْ خُلَفَائِي فِي أَرْضِي بَعْدَ اِنْقِضَاءِ وَحْيِي».<span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>`,
+
+          `نورانیّت آسمان ها و زمین به نور الزهراء
+
+آن هنگام که خداوند آسمان ها و زمین را از نور "فاطمه" خلق فرمود،
+با زهور نور او، آسمان ها و زمین را روشن گردانید. ملائکه از حیرت این نور، به ساحت رب خویش عرضه داشتند،
+إِلَهَنَا وَ سَيِّدَنَا! نورانیت آسمان ها و زمین به نور زهراء
+
+آن هنگام که خداوند آسمان ها و زمین را از نور "فاطمه" خلق فرمود،
+با زهور نور او، آسمان ها و زمین را روشن گردانید. ملائکه از حیرت این نور، به ساحت رب خویش عرضه داشتند،
+إِلَهَنَا وَ سَيِّدَنَا! لِمَنْ هَذَا النُّورُ الزَّاهِرُ 
+الَّذِي قَدْ أَشْرَقَتْ بِهِ السَّمَاوَاتُ وَ الْأَرْضُ؟!<span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>
+
+و خداوند فرمود:
+این نور را که از نور جلال خویش خلق نمودم، برای فاطمه، دختر حبیبم، زوجه ولی و برادر نبی و پدر حجت های خویش بر بندگانم، خلق نمودم.
+و بدین سبب "فاطمه" ی خود را، "زهرا" نامید.
+
+پیغمبر اکرم (صلی الله علیه و آله) فرمودند:
+«فخلق منه السماوات و الأرض، فالسماوات و الأرض، من نور ابنتی فاطمة، و نور ابنتی فاطمة من نور اللّه، و ابنتی فاطمة أفضل من السماوات و الأرض ...
+...فأزهرت السماوات و الأرض، ثمّ أشرقت بنورها، فلأجل ذلک سمّیت «الزهراء». 
+فقالت الملائکة: 
+إلهنا و سیّدنا لمن هذا النور الزاهر، الّذی قد أشرقت به السماوات و الأرض؟ 
+فأوحی اللّه إلیها: هذا نور اخترعته من نور جلالی لأمتی فاطمة ابنة حبیبی، و زوجة ولیّی و أخو نبیّی و أبو حججی علی عبادی، اشهدکم ملائکتی أنّی قد جعلت ثواب تسبیحکم و تقدیسکم لهذه المرأة و شیعتها و محبّیها إلی یوم القیامة». <span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>`,
+
+          `نورانیّت اهل آسمان به نور زهراء
+‌
+حضرت اصدق الصادقين (سلام الله علیه) در حدیث دیگری علت تسميه ی حضرت مادر به اسم اعظم «زهراء» را نورانیت اهل آسمان به نور آن حضرت دانستند:
+‌
+«لِأَنَّهَا كَانَتْ إِذَا قَامَتْ فِي مِحْرَابِهَا زَهَرَ نُورُهَا لِأَهْلِ اَلسَّمَاءِ كَمَا يَزْهَرُ نُورُ اَلْكَوَاكِبِ لِأَهْلِ اَلْأَرْضِ».<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>
+‌
+هر گاه بانوی مُلک و ملکوت، آن سیده زنان عوالم، به عبادت می ایستاد،
+نوری بر آسمان ها از آن محراب ساطع می گردید که چونان ستارگانی که شب اهل زمین را،
+که در ظلمت و تاریکی به سر می برند، روشن می نمودند، اهل سماوات را روشنی می بخشید.
+‌
+زهراء، یعنی آن قدیسه ی مبارکه ی مطهره ای که قیام و قعودش، سرچشمه نورانیت هستی بود.
+‌
+و چگونه ملائکه آسمانی، مبهوت این نور نباشند و در برابر آن خضوع و سجود ننمایند؟!`,
+
+          `قسمت پنجم
+
+قال رسول الله (صلى الله عليه وآله):
+اِقْتَدُوا  بِالشَّمْسِ  فَإِذَا  غَابَتِ  اَلشَّمْسُ فَاقْتَدُوا بِالْقَمَرِ فَإِذَا  غَابَ اَلْقَمَرُ فَاقْتَدُوا بِالزُّهَرَةِ  فَإِذَا  غَابَتِ  اَلزُّهَرَةُ فَاقْتَدُوا بِالْفَرْقَدَيْنِ
+...أَنَا اَلشَّمْسُ وَ عَلِيٌّ عَلَيْهِ السَّلاَمُ اَلْقَمَرُ وَ فَاطِمَةُ اَلزُّهَرَةُ وَ اَلْفَرْقَدَانِ اَلْحَسَنُ وَ اَلْحُسَيْنُ عَلَيْهِمَا السَّلاَمُ.<span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>
+
+پیامبر اکرم (صلی الله علیه وآله) فرمودند:
+به شمس اقتدا کنید و پس از غیب شمس، به قمر اقتدا نمایید. 
+پس از غیاب قمر، زهره را مقتدای خود قرار دهید و پس از آن، فرقدان را. 
+مقصود از شمس، من رسول الله (صلی الله علیه واله) هستم و مقصود از قمر، أميرالمؤمنین علی (علیه السلام) است: 
+زهرة وجود مقدس حضرت فاطمة الزهراء (سلام الله عليها) و فرقدان امام حسن و امام حسین (علیهما السلام) هستند.
+
+ما بندگان عشقیم، از بندها برستیم               
+در بزمِ لی مَعَ الله، یک جُرعه نوشِ مستیم
+ 
+در این حریم کوثر، صد ناقه پِی نمودند
+گویند هر چه اَغیار، ما زُهره می پرستیم`,
+
+          `لمَ سُمِّيَتِ الزَّهْرَاءُ زَهْرَاء(سلام الله علیها)
+
+از حضرت مولانا الصادق (علیه السلام) سوال شده است:
+
+لمَ سُمِّيَتِ الزَّهْرَاءُ زَهْرَاءَ (سلام الله علیها)؟
+
+چرا حضرت زهرا (علیها السلام)، زهرا (سلام الله علیها) نامیده شد؟
+
+قالَ لِاَنَّهَا تَزْهَرُ لِاَمِيرِ الْمُوْمِنِينَ (علیه السلام) فِي النَّهَارِ ثَلَاثَ مَرَّاتٍ بِالنُّورِ.
+
+بخاطر اینکه مادرمان حضرت فاطمه (علیها السلام) در روز سه نوبت بر امير المؤمنين على (علیه السلام) نور افشانی می کردند.
+
+کَانَ يَزْهَرُ نُورُ وَجْهِهَا صَلَاهَ الْغَدَاهِ وَ النَّاسُ فِي فِرَاشِهِمْ فَيَدْخُلُ بِيَاضُ ذَلِکَ النُّورِ إِلَي حُجُرَاتِهِمْ بِالْمَدِينَهِ؛
+
+هنگام نماز صبح که می شد نور سفیدی تمام منازل مدینه را فرا می گرفت، خدمت بیامبر اکرم (صلوات الله علیها) می آمدند و می گفتند: این نور سفید چیست؟
+
+به منزل حضرت فاطمہ (سلام الله علیها) می آمدند، 
+فيرَوْنَهَا قَاعِدَهً فِي مِحْرَابِهَا؛
+می دیدند حضرت بی بی، ام عالم در محرابشان ایستاده اند،
+
+و النُّورُ يسْطَعُ مِنْ مِحْرَابِهَا؛ 
+و نور از محراب حضرت فاطمه (علیها السلام) به همه جا می تابد،
+
+فإِذَا انْتَصَفَ النَّهَارُ وَ تَرَتَّبَتْ لِلصَّلَاهِ الْغَدَاهِ؛
+وقتی برای نماز ظهر آماده می شد .
+
+زهَرَ نُورُ وَجْهِهَا بِالصُّفْرَهِ؛
+نور صوتش به زردی می زد و به همان صورت تمام خانه های مدینه را نور زردی فرا می گرفت و می آمدند و می گفتند: این چیست؟ می فرمودند:
+
+قامَة فاطمة فِي مِحْرَابِهَا، 
+فإِذَا کَانَ آخِرُ النَّهَارِ وَ غَرَبَتِ الشَّمْسُ؛
+در حال غروب خورشید،
+احْمَرَّ وَجْهُ فَاطِمَهَ (سلام الله علیها)؛
+
+صورت حضرت فاطمه (علیها السلام) رنگ سرخ می درخشد و برای امیر المؤمنین علی (علیه السلام) سرخ تجلی می کند،
+
+فاَشْرَقَ وَجْهُهَا بِالْحُمْرَهِ فَرَحاً وَ شُکْراً لِلَّهِ فَلَمْ يزَلْ ذَلِکَ النُّورُ فِي وَجْهِهَا حَتَّي وُلِدَ الْحُسَينُ (علیه السلام)؛<span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>
+
+این نور قرمز هر شب در صورت حضرت فاطمه (علیها السلام) بود تا امام حسین (علیہ السلام) به ظهور رسید.`,
+
+          `قسمت هفتم
+‌
+پس از شهادت پیامبر اکرم (صلی الله علیه و آله) حقیقت ظلمت مطلق در برابر مشکات نوری قرار گرفت که نام او زهره زهرا (سلام الله علیها) بود.
+‌
+نور وجود او، آسمان های هفت گانه و زمین را روشن نمود. آن هنگام که خداوند می خواست ملائکه را آزمایش کند، ابر تاریکی بر آنها فرستاد که ملکه که خود نور هستند نمی توانستند اطراف خود را بنگرند، در ظلمت فرو رفتند.
+‌
+پس در آسمان های هفتگانه، نور وجود ایشان ملائکه ای را که از جنس نور خلق شده اند را از ظلمتی که مورد امتحان الهی واقع شدند، خارج نمود. پس در زمین نیز باید اینچنین باشد.
+‌
+آن مشکات و مصدر نوری که از زهور و تجلی اش بر مقام عظمای ولایت، تمام خانه های مدینه، آن هنگام که بر محراب نماز می ایستاد، منور می شد، بر اهل زمین چنین نورافشانی می نمود.
+‌
+نامرد مردمان مدینه این درخشش را می دیدند، ولی غفلت از حقیقت، آنان را چنین کرده بود که:
+لَهُمْ قُلُوبٌ لا يَفْقَهُونَ بِها وَ لَهُمْ أَعْيُنٌ لا يُبْصِرُونَ بِها وَ لَهُمْ آذانٌ لا يَسْمَعُونَ بِها... <span class="ref-link" onclick="toggleSource(this, 7)">[۷]</span><div class="inline-source-box"></div>
+و آن ظلمت مطلقی که مقابل این نور قد علم کرد، با آتش حقد و کینه خواست که این نور الهی را خاموش کند.
+‌
+و مصائبی بعد از پدر، بر وجود لطیفه ی نورانی این حوریه روا داشتند، که روز روشن برایش چون شبی تیره و تار گشت.
+‌
+صُبَّتْ عَلَیَّ مَصَائِـبُ لَوْ أَنَّهَا
+صُبَّتْ عَلَى الْأَیَّامِ صِرْنَ لَیَالِیَا
+‌
+مصیبت هایی بر من وارد شد که اگر این مصیبت ها بر روزها وارد می شد، آن روزها تبدیل به شب می شدند...
+‌
+اللهم العن اول ظالم ظلم حق محمد و آل محمد`,
+
+          `قسمت هشتم
+
+یا اماه !
+امروز ما در تاریکی های زمانه خویش، چشم به همان نوری دوخته ایم که مایه روشنی آسمان و زمین گردید.
+نوری که در نسل طاهرین شما ادامه یافت و در وجود فرزندتان، آخرین حجت خدا، مهدی موعود (عجل الله تعالی فرجه الشریف) متجلی گردید.
+
+تنها امیدمان همان تار و پود نورانی چادر شماست که به آن تمسک می جوییم تا عروه الوثقایی باشد که دل های خسته مان را به نور جگر گوشه تان پیوند دهد.
+
+ما در انتظار آن لحظه ایم که نور محراب شما، در قامت امام مان دوباره بر زمین بتابد. آن لحظه ای که ظلمت ها کنار رود و زمین همچون آسمان به نور هدایت تان روشن گردد.
+
+الهی بفاطمه و ابیها و بعلها و بنيها عجل لمولانا المظلوم الفرج.`
+        ]
+      },
+
+      {
+        title: "رایحه نهم",
+        name: "طاهره",
+        bgImage: "scroll-bg-tahereh.jpg",
+        quote: "«استشمام رایحه و بوی خوش طهارت و قداست از آستان مقدس فاطمی»",
+        sources: {
+          1: "أمالي، شیخ صدوق، ص ۵۹۳، حدیث ۱.",
+          2: "بحار الأنوار، ج ‏۴۳، ص ۱۹، حدیث ۲۰.",
+          3: "سوره احزاب، آیه ۳۳.",
+          4: "بحار الأنوار، ج ۴۳، ص ۵۴.",
+          5: "مناقب آل ابى طالب، ج ۲، ص ۲۰۵.",
+          6: "الموسوعة الكبرى عن فاطمة الزهراء، ج ۱۱، ص ۳۱؛ الجنة العاصمة، ص ۴۹۷، چاپ ۱۳۸۹."
+        },
+        parts: [
+          `طاهره به ذاتی اطلاق می شود که پاک و پاکیزه است و نتیجه این پاکی این است که؛ کسی نمی تواند او را مس و لمس کند جز کسی که او نیز پاک و پاکیزه باشد؛
+پس علی (علیه السّلام) هم کفو و همسرش گشت.
+
+حضرت رسول الله (صلی الله علیه و آله) به حضرت خدیجه (سلام الله علیها) فرمودند: 
+
+ يَا خَدِيجَةُ ... أَنَّهَا النَّسْلَةُ الطَّاهِرَةُ الْمَيْمُونَةُ ... <span class="ref-link" onclick="toggleSource(this, 1)">[۱]</span><div class="inline-source-box"></div>
+ای خديجه، ... فاطمه (سلام الله علیها) همان نسل پاك و پاکیزه و با ميمنت است. ...  
+ 
+ حضرت امام محمد باقر (علیه السلام) فرمودند: 
+
+إِنَّمَا سُمِّيَتْ فَاطِمَةُ بِنْتُ مُحَمَّدٍ الطَّاهِرَةَ لِطَهَارَتِهَا مِنْ كُلِّ دَنَسٍ وَ طَهَارَتِهَا مِنْ كُلِّ رَفَثٍ ... <span class="ref-link" onclick="toggleSource(this, 2)">[۲]</span><div class="inline-source-box"></div>
+حضرت فاطمه (سلام الله علیها) را از آن جهت طاهره نامیدند که از هر پلیدی و ناپاکی پاک و طاهر بود.`,
+
+          `"تجلی آیه تطهیر"
+
+در آن خلوتگاه نور، که آسمان به زمین پا نهاده بود، سایه رسول رحمت بر آستانه خانه فاطمه افتاد.
+
+بوی نسیم وحی، فضای مدینه را عطر آگین کرده بود.
+
+و او را دید که خود را در عبایی پوشیده. 
+ناگاه، در گشوده شد و علی آمد، آن یگانه وصی، که وجودش ترجمان ایمان بود.
+
+سپس دو شکوفه از باغ رسالت، حسن و حسین، به سوی جد خویش شتافتند و در سایه سار آن عبا، جان سپردند.
+
+در آن هنگامه که پنج تن، در زیر آن عبا گرد آمدند، گویی تمام عالم در آن نقطه جمع شد. 
+جهان به انتظار نشست و فرشتگان بال خویش برکشیدند.
+
+ناگاه، آسمان شکافت و کلام خدا فرود آمد، با آهنگ رحمتی بیکران:
+
+إِنَّما يُريدُ اللهُ لِيُذْهِبَ عَنْكُمُ الرِّجْسَ أَهْلَ الْبَيْتِ وَ يُطَهِّرَكُمْ تَطْهيراً.<span class="ref-link" onclick="toggleSource(this, 3)">[۳]</span><div class="inline-source-box"></div>
+همانا خداوند اراده کرده است تا هر پلیدی را از شما خاندان پیامبر بزداید و شما را پاک و طاهر گرداند.
+
+آری! "طاهره" است که ذاتش به پاکی ابدی پیوسته.`,
+
+          `هِیَ بَضْعَةٌ مِنِّی وَ هِیَ قَلْبِی وَ رُوحِیَ الَّتِی بَیْنَ جَنْبَیَّ.<span class="ref-link" onclick="toggleSource(this, 4)">[۴]</span><div class="inline-source-box"></div>
+
+در هر جمعی که وارد می‌شد، برایش برمی‌خاست؛
+با شوقی که گویی بهشت در برابرش ایستاده،
+دست‌هایش را می‌گرفت و می‌بوسید.
+
+می‌دانست روزی این خانه شعله‌ور می‌شود،
+و دستی بی‌رحم، حریمش را خواهد شکست، 
+پس هر بار که از سفری بازمی‌گشت،
+درِ این خانه را می‌کوبید، با دیدنش جان می‌گرفت و در عطر وجودش، بهشت را تنفس می کرد.
+
+پدر رفت و «امّ‌ابیها» یش ماند.
+ چادری بر زمین افتاد،
+عطر سیب‌های طوبی در دود گم شد
+و چشمانی که روشنایی دیدۀ پیامبر بودند،
+در اشک نشستند.
+در سکوتِ خانه‌ای سوخته،
+با خاطره‌ی دستی که موهایش را نوازش می‌کرد 
+و صدایی که «روح من» صدایش می‌زد؛
+ شب را به صبح می‌آورد و زیر لب می‌خواند:
+
+«فُقِدَ النَّبِىُّ وَظُلِمَ الْوَصِىُّ، هُتِكَ وَاللّهِ حِجابُهُ...» <span class="ref-link" onclick="toggleSource(this, 5)">[۵]</span><div class="inline-source-box"></div>
+
+پيامبر از دست رفت،
+وصیّ او مظلوم ماند،
+و حریمِ خدا شکسته شد.`,
+
+          `دربی که روزی پیامبر با بوی بهشت گشوده بود، فرو ریخت.
+بازویی که پیامبر بوسیده بود ،کبود شد.
+طناب بر گردن علی افتاد و شمشیرها بالای سرش چرخیدند.
+
+زهرا ایستاد، خمیده شد تا علی را بازداشت نکنند.
+علی اما در میان جمعیت، خشم و غم بود
+و  زمزمه می کرد:
+«آیا فاطمه با جسارت زده می‌شود؟!
+ای کاش پیش از این روز می‌مردم و این بی‌وفایی را نمی‌دیدم…»
+
+فَلَيْتَ ابْنُ أبي طالِبٍ ماتَ قَبْلَ يَومِهِ، 
+فَلا يَرىَ الْكُفَرَةَ الْفَجَرَةَ 
+قَد إزْدَحَمُوا عَلى ظُلْمِ الطاهِرَةِ البرَّةِ. <span class="ref-link" onclick="toggleSource(this, 6)">[۶]</span><div class="inline-source-box"></div>
+
+کمر زهرا برای دفاع از امام زمانش و حریم پیامبر زیر ضربه‌ها سیاه شد،
+خانه، حالا شاهد سکوت و دردش بود
+و مبادا اهل خانه متوجه قامت خمیده اش شوند
+آن همه از روشنایی اش در تاریکی چادر خاکی اش پنهان ماند.`
+        ]
+      }
+    ];
+
+    /* =====================================================
+       ذرات نور
+    ===================================================== */
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.alpha = Math.random() * 0.8 + 0.2;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.fillStyle = `rgba(255, 230, 140, ${this.alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 90; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+
+    /* =====================================================
+       عناصر اصلی
+    ===================================================== */
+    const bgStage1 = document.getElementById('bg-stage1');
+    const bgStage2 = document.getElementById('bg-stage2');
+    const budTarget = document.getElementById('bud-target');
+    const petalTargets = document.querySelectorAll('.petal-target');
+
+    const audio = document.getElementById('bg-music');
+    const playBtn = document.getElementById('btn-audio-play');
+    const muteBtn = document.getElementById('btn-audio-mute');
+    const helpBtn = document.getElementById('btn-help');
+    const homeBtn = document.getElementById('btn-home');
+
+    /* =====================================================
+       سیستم پخش مداحی — پخش حلقه‌ای هر تعداد فایل موجود از ۱ تا ۵
+    ===================================================== */
+    const playlist = [
+      "music1.mp3",
+      "music2.mp3",
+      "music3.mp3",
+      "music4.mp3",
+      "music5.mp3"
+    ];
+
+    let availablePlaylist = [];
+    let currentTrackIndex = 0;
+    let userMuted = false;
+    let musicScanDone = false;
+
+    async function fileExists(file) {
+      try {
+        const response = await fetch(file, {
+          method: "HEAD",
+          cache: "no-store"
+        });
+        return response.ok;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    async function detectMusicFiles() {
+      const found = [];
+
+      for (const file of playlist) {
+        if (await fileExists(file)) {
+          found.push(file);
+        }
+      }
+
+      availablePlaylist = found;
+      musicScanDone = true;
+      currentTrackIndex = 0;
+
+      if (availablePlaylist.length > 0) {
+        audio.src = availablePlaylist[0];
+        audio.load();
+
+        if (!userMuted) {
+          audio.play().catch(() => {
+            // پخش خودکار در بعضی مرورگرها تا اولین تعامل کاربر مسدود است.
+          });
+        }
+      }
+    }
+
+    function playNextTrack() {
+      if (userMuted || availablePlaylist.length === 0) return;
+
+      currentTrackIndex = (currentTrackIndex + 1) % availablePlaylist.length;
+      audio.src = availablePlaylist[currentTrackIndex];
+      audio.load();
+      audio.play().catch(() => {});
+    }
+
+    audio.addEventListener('ended', playNextTrack);
+
+    playBtn.addEventListener('click', async () => {
+      userMuted = false;
+
+      if (!musicScanDone) {
+        await detectMusicFiles();
+        return;
+      }
+
+      if (availablePlaylist.length > 0) {
+        audio.play().catch(() => {});
+      }
+    });
+
+    muteBtn.addEventListener('click', () => {
+      userMuted = true;
+      audio.pause();
+    });
+
+    detectMusicFiles();
+
+/* =====================================================
+   طومار
+===================================================== */
+const scrollOverlay = document.getElementById('scroll-overlay');
+const scrollFrame = document.getElementById('scroll-frame');
+const scrollHeaderTitle = document.getElementById('scroll-header-title');
+const scrollNameTitle = document.getElementById('scroll-name-title');
+const scrollQuoteText = document.getElementById('scroll-quote-text');
+const scrollMainText = document.getElementById('scroll-main-text');
+const scrollWrapper = document.getElementById('scroll-wrapper');
+
+const btnBackToMenu = document.getElementById('btn-back-to-menu');
+const btnBackPetals = document.getElementById('btn-back-petals');
+const btnBackHome = document.getElementById('btn-back-home');
+
+const infoModal = document.getElementById('info-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+const closeModal = document.getElementById('close-modal');
+
+const zoomInBtn = document.getElementById('zoom-in');
+const zoomOutBtn = document.getElementById('zoom-out');
+
+let currentStage = 1;
+let currentScentIndex = 0;
+let currentFontSize = 15;
+
+
+/* =====================================================
+   ورود به ۹ رایحه
+===================================================== */
+budTarget.addEventListener('click', () => {
+  currentStage = 2;
+  bgStage1.style.opacity = '0';
+  bgStage1.style.pointerEvents = 'none';
+  bgStage2.style.opacity = '1';
+  bgStage2.style.pointerEvents = 'auto';
+  budTarget.style.display = 'none';
+  petalTargets.forEach(p => p.style.display = 'block');
+});
+
+
+/* =====================================================
+   بازگشت به خانه
+===================================================== */
+function goToHome() {
+  currentStage = 1;
+  closeScroll();
+  bgStage2.style.opacity = '0';
+  bgStage2.style.pointerEvents = 'none';
+  bgStage1.style.opacity = '1';
+  bgStage1.style.pointerEvents = 'auto';
+  budTarget.style.display = 'block';
+  petalTargets.forEach(p => p.style.display = 'none');
+}
+
+homeBtn.addEventListener('click', goToHome);
+
+
+/* =====================================================
+   منوی هر رایحه
+===================================================== */
+function openScentMenu(index) {
+  currentScentIndex = index;
+  const data = scentsData[index];
+
+  scrollFrame.style.backgroundImage = `url('${data.bgImage}')`;
+  scrollHeaderTitle.textContent = data.title;
+  scrollNameTitle.textContent = data.name;
+  scrollQuoteText.textContent = data.quote;
+  scrollQuoteText.style.display = 'block';
+
+  btnBackToMenu.style.display = 'none';
+
+  let menuHtml = `
+    <div class="parts-menu-list">
+  `;
+
+  data.parts.forEach((_, i) => {
+    menuHtml += `
+      <div class="parts-menu-item" onclick="openPart(${i})">
+        <span>قسمت ${toPersianNum(i + 1)}</span>
+        <span>◄</span>
+      </div>
+    `;
+  });
+
+  if (data.sources && Object.keys(data.sources).length > 0) {
+    menuHtml += `
+      <div class="parts-menu-item" onclick="openSourcesPage()">
+        <span>منابع</span>
+        <span>◄</span>
+      </div>
+    `;
+  }
+
+  menuHtml += `
+    </div>
+  `;
+
+  scrollMainText.innerHTML = menuHtml;
+  scrollWrapper.scrollTop = 0;
+
+  scrollOverlay.classList.add('active');
+
+  setTimeout(() => {
+    scrollOverlay.classList.add('open');
+  }, 20);
+}
+
+
+/* =====================================================
+   باز کردن قسمت
+===================================================== */
+window.openPart = function(partIndex) {
+  const data = scentsData[currentScentIndex];
+
+  scrollQuoteText.style.display = 'none';
+  btnBackToMenu.style.display = 'inline-block';
+
+  let partHeaderHtml = `
+    <div style="
+      color:#ffd700;
+      font-size:18px;
+      font-weight:bold;
+      border-bottom:1px solid rgba(212,175,55,0.4);
+      padding-bottom:6px;
+      margin-bottom:12px;
+    ">
+      قسمت ${toPersianNum(partIndex + 1)}
+    </div>
+  `;
+
+  scrollMainText.innerHTML =
+    partHeaderHtml + data.parts[partIndex];
+
+  scrollMainText.style.fontSize = `${currentFontSize}px`;
+  scrollWrapper.scrollTop = 0;
+};
+
+
+/* =====================================================
+   لینک شماره منابع داخل متن
+===================================================== */
+window.toggleSource = function(element, srcNum) {
+  const data = scentsData[currentScentIndex];
+  const box = element.nextElementSibling;
+
+  if (!box || !box.classList.contains('inline-source-box')) return;
+
+  const wasActive = box.classList.contains('active');
+
+  scrollMainText.querySelectorAll('.inline-source-box.active').forEach(b => {
+    if (b !== box) b.classList.remove('active');
+  });
+
+  if (wasActive) {
+    box.classList.remove('active');
+  } else {
+    const sourceText = (data.sources && data.sources[srcNum]) || '';
+    box.innerHTML = `[${toPersianNum(srcNum)}] ${sourceText}`;
+    box.classList.add('active');
+  }
+};
+
+
+/* =====================================================
+   صفحه منابع
+===================================================== */
+window.openSourcesPage = function(selectedSource) {
+  const data = scentsData[currentScentIndex];
+
+  scrollQuoteText.style.display = 'none';
+  btnBackToMenu.style.display = 'inline-block';
+
+  let sourcesHtml = `
+    <div style="
+      color:#ffd700;
+      font-size:18px;
+      font-weight:bold;
+      border-bottom:1px solid rgba(212,175,55,0.4);
+      padding-bottom:8px;
+    ">
+      منابع
+    </div>
+  `;
+
+  for (let key in data.sources) {
+    const isSelected =
+      String(key) === String(selectedSource);
+
+    sourcesHtml += `
+      <div
+        class="source-item"
+        id="source-${key}"
+        style="
+          ${isSelected
+            ? 'background:rgba(212,175,55,0.22); border-right:3px solid #ffd700; padding:8px; border-radius:6px;'
+            : ''}
+        "
+      >
+        [${toPersianNum(key)}] ${data.sources[key]}
+      </div>
+    `;
+  }
+
+  scrollMainText.innerHTML = sourcesHtml;
+  scrollWrapper.scrollTop = 0;
+
+  if (
+    selectedSource !== undefined &&
+    selectedSource !== null
+  ) {
+    setTimeout(() => {
+      const selectedElement =
+        document.getElementById(`source-${selectedSource}`);
+
+      if (selectedElement) {
+        selectedElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    }, 50);
+  }
+};
+
+
+/* =====================================================
+   بازگشت به منوی قسمت‌ها
+===================================================== */
+btnBackToMenu.addEventListener('click', () => {
+  openScentMenu(currentScentIndex);
+});
+
+
+/* =====================================================
+   بستن طومار
+===================================================== */
+function closeScroll() {
+  scrollOverlay.classList.remove('open');
+
+  setTimeout(() => {
+    scrollOverlay.classList.remove('active');
+  }, 400);
+}
+
+
+/* =====================================================
+   گلبرگ‌ها
+===================================================== */
+petalTargets.forEach(petal => {
+  petal.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    const index =
+      parseInt(petal.getAttribute('data-index'));
+
+    openScentMenu(index);
+  });
+});
+
+
+/* =====================================================
+   دکمه‌های برگشت
+===================================================== */
+btnBackPetals.addEventListener('click', closeScroll);
+btnBackHome.addEventListener('click', goToHome);
+
+
+/* =====================================================
+   بزرگ‌نمایی متن
+===================================================== */
+zoomInBtn.addEventListener('click', () => {
+  if (currentFontSize < 22) {
+    currentFontSize += 2;
+    scrollMainText.style.fontSize =
+      `${currentFontSize}px`;
+  }
+});
+
+zoomOutBtn.addEventListener('click', () => {
+  if (currentFontSize > 12) {
+    currentFontSize -= 2;
+    scrollMainText.style.fontSize =
+      `${currentFontSize}px`;
+  }
+});
+
+
+/* =====================================================
+   راهنما
+===================================================== */
+helpBtn.addEventListener('click', () => {
+  if (currentStage === 1) {
+    showModal(
+      'راهنما',
+      'روی غنچه یاس کلیک کنید تا وارد سفری در نه نام مقدس حضرت زهرا سلام الله علیها شوید.'
+    );
+  } else {
+    showModal(
+      'راهنما',
+      'روی هر یک از نه گلبرگ کلیک کنید تا فهرست قسمت‌های آن نام مقدس نمایش داده شود.'
+    );
+  }
+});
+
+
+/* =====================================================
+   پنجره راهنما
+===================================================== */
+function showModal(title, desc) {
+  modalTitle.textContent = title;
+  modalDesc.textContent = desc;
+  infoModal.classList.add('active');
+  setTimeout(() => {
+    infoModal.classList.add('open');
+  }, 20);
+}
+
+closeModal.addEventListener('click', () => {
+  infoModal.classList.remove('open');
+  setTimeout(() => {
+    infoModal.classList.remove('active');
+  }, 350);
+});
+
+
+/* =====================================================
+   تبدیل اعداد انگلیسی به فارسی
+===================================================== */
+function toPersianNum(n) {
+  return n.toString().replace(
+    /\d/g,
+    d => '۰۱۲۳۴۵۶۷۸۹'[d]
+  );
+}
+
+</script>
+</body>
+</html>
